@@ -1,0 +1,7 @@
+#!/usr/bin/env ruby
+
+require 'obvious'
+
+if ARGV[0] == 'generate'
+  Obvious::generate
+end
