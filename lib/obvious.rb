@@ -1,4 +1,5 @@
-require "obvious/version"
+require 'obvious/version'
+require 'obvious/contract'
 require 'yaml'
 
 module Obvious
@@ -34,7 +35,7 @@ spec = Gem::Specification.find_by_name("obvious")
 gem_root = spec.gem_dir
 gem_lib = gem_root + "/lib"
 
-`cp #{gem_lib}/obvious/files/contract.rb #{target_path}/app/contracts/contract.rb`
+#`cp #{gem_lib}/obvious/files/contract.rb #{target_path}/app/contracts/contract.rb`
 `cp #{gem_lib}/obvious/files/Rakefile #{target_path}/Rakefile`
 entities = Hash.new 
 jacks = Hash.new 
@@ -123,7 +124,7 @@ end
 FIN
   snake_name = action['Action'].gsub(/(.)([A-Z])/,'\1_\2').downcase
   
-  filename = "app/actions/#{snake_name}.rb"
+  filename = "#{app_dir}/actions/#{snake_name}.rb"
   File.open(filename, 'w') {|f| f.write(output) }
 
 #puts output
@@ -142,7 +143,7 @@ end
 
 FIN
 
-  filename = "app/spec/actions/#{snake_name}_spec.rb"
+  filename = "#{app_dir}/spec/actions/#{snake_name}_spec.rb"
   File.open(filename, 'w') {|f| f.write(output) }
 
   #puts output
@@ -192,7 +193,7 @@ end
 FIN
   snake_name = name.gsub(/(.)([A-Z])/,'\1_\2').downcase
   
-  filename = "app/entities/#{snake_name}.rb"
+  filename = "#{app_dir}/entities/#{snake_name}.rb"
   File.open(filename, 'w') {|f| f.write(output) }
 
   output = <<FIN
@@ -204,7 +205,7 @@ end
 
 
 FIN
-  filename = "app/spec/entities/#{snake_name}_spec.rb"
+  filename = "#{app_dir}/spec/entities/#{snake_name}_spec.rb"
   File.open(filename, 'w') {|f| f.write(output) }
 
 
@@ -245,7 +246,7 @@ jacks.each do |k, v|
 
 
   output = <<FIN
-require_relative 'contract'
+require 'obvious'
    
 class #{k}Contract < Contract
   def self.contracts
@@ -257,13 +258,13 @@ FIN
 
   snake_name = name.gsub(/(.)([A-Z])/,'\1_\2').downcase
   
-  filename = "app/contracts/#{snake_name}_contract.rb"
+  filename = "#{app_dir}/contracts/#{snake_name}_jack_contract.rb"
   File.open(filename, 'w') {|f| f.write(output) }
 
   #puts output
 
   output = <<FIN
-require_relative '../../contracts/#{snake_name}_contract'
+require_relative '../../contracts/#{snake_name}_jack_contract'
 
 describe #{k}Contract do
 #{method_specs} 
@@ -271,7 +272,7 @@ end
 
 FIN
 
-  filename = "app/spec/contracts/#{snake_name}_spec.rb"
+  filename = "#{app_dir}/spec/contracts/#{snake_name}_jack_spec.rb"
   File.open(filename, 'w') {|f| f.write(output) }
 
   #puts output
