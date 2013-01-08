@@ -15,14 +15,14 @@ app_dir = 'app'
 
 counter = 1
 while File.directory? app_dir
-  app_dir = "app_#{counter}" 
+  app_dir = "app_#{counter}"
   counter += 1
 end
 
 puts "Generating application at: #{app_dir}"
 
-dirs = ['/', '/actions', '/contracts', '/entities', 
-        '/spec', '/spec/actions', '/spec/contracts', '/spec/entities', 
+dirs = ['/', '/actions', '/contracts', '/entities',
+        '/spec', '/spec/actions', '/spec/contracts', '/spec/entities',
         '/spec/doubles']
 
 dirs.each do |dir|
@@ -30,24 +30,24 @@ dirs.each do |dir|
 end
 
 
-target_path = File.realpath Dir.pwd 
+target_path = File.realpath Dir.pwd
 spec = Gem::Specification.find_by_name("obvious")
 gem_root = spec.gem_dir
 gem_lib = gem_root + "/lib"
 
 #`cp #{gem_lib}/obvious/files/contract.rb #{target_path}/app/contracts/contract.rb`
 `cp #{gem_lib}/obvious/files/Rakefile #{target_path}/Rakefile`
-entities = Hash.new 
-jacks = Hash.new 
+entities = Hash.new
+jacks = Hash.new
 
-files = Dir['descriptors/*.yml'] 
+files = Dir['descriptors/*.yml']
 
 files.each do |file|
-  action = YAML.load_file file 
+  action = YAML.load_file file
   code = ''
   #puts action.inspect
 
-  local_jacks = Hash.new 
+  local_jacks = Hash.new
   local_entities = Hash.new
 
   action['Code'].each do |entry|
@@ -63,24 +63,24 @@ files.each do |file|
 
         if info[0].index 'Jack'
           unless jacks[info[0]]
-            jacks[info[0]] = [] 
+            jacks[info[0]] = []
           end
-         
+
           unless local_jacks[info[0]]
-            local_jacks[info[0]] = [] 
+            local_jacks[info[0]] = []
           end
- 
-          jacks[info[0]] << info[1]        
-          local_jacks[info[0]] << info[1]        
+
+          jacks[info[0]] << info[1]
+          local_jacks[info[0]] << info[1]
         else
           unless entities[info[0]]
-            entities[info[0]] = [] 
-          end    
+            entities[info[0]] = []
+          end
 
           unless local_entities[info[0]]
-            local_entities[info[0]] = [] 
-          end    
-      
+            local_entities[info[0]] = []
+          end
+
           entities[info[0]] << info[1]
           local_entities[info[0]] << info[1]
         end
@@ -90,7 +90,7 @@ files.each do |file|
 
   end
 
- 
+
   jack_inputs = ''
   jack_assignments = ''
 
@@ -123,7 +123,7 @@ class #{action['Action']}
 end
 FIN
   snake_name = action['Action'].gsub(/(.)([A-Z])/,'\1_\2').downcase
-  
+
   filename = "#{app_dir}/actions/#{snake_name}.rb"
   File.open(filename, 'w') {|f| f.write(output) }
 
@@ -173,7 +173,7 @@ entities.each do |k, v|
   def #{method} input
     nil
   end
-    " 
+    "
 
     method_specs << "
   describe '.#{method}' do
@@ -185,14 +185,14 @@ entities.each do |k, v|
     "
 
   end
-  
+
   output = <<FIN
 class #{name}
 #{method_definitions}
 end
 FIN
   snake_name = name.gsub(/(.)([A-Z])/,'\1_\2').downcase
-  
+
   filename = "#{app_dir}/entities/#{snake_name}.rb"
   File.open(filename, 'w') {|f| f.write(output) }
 
@@ -215,7 +215,7 @@ end
 
 
 jacks.each do |k, v|
-  
+
   name = k.chomp('Jack').downcase
 
   method_specs = ''
@@ -229,7 +229,7 @@ jacks.each do |k, v|
     output_shape = {}
     call_method :#{method}_alias, input, input_shape, output_shape
   end
-    " 
+    "
 
     method_specs << "
   describe '.#{method}_contract' do
@@ -241,23 +241,23 @@ jacks.each do |k, v|
 
   end
     "
-    
+
   end
 
 
   output = <<FIN
 require 'obvious'
-   
+
 class #{k}Contract < Contract
   def self.contracts
     #{v.to_s}
   end
-#{method_definitions} 
+#{method_definitions}
 end
 FIN
 
   snake_name = name.gsub(/(.)([A-Z])/,'\1_\2').downcase
-  
+
   filename = "#{app_dir}/contracts/#{snake_name}_jack_contract.rb"
   File.open(filename, 'w') {|f| f.write(output) }
 
@@ -267,12 +267,12 @@ FIN
 require_relative '../../contracts/#{snake_name}_jack_contract'
 
 describe #{k}Contract do
-#{method_specs} 
+#{method_specs}
 end
 
 FIN
 
-  filename = "#{app_dir}/spec/contracts/#{snake_name}_jack_spec.rb"
+  filename = "#{app_dir}/spec/contracts/#{snake_name}_jack_contract_spec.rb"
   File.open(filename, 'w') {|f| f.write(output) }
 
   #puts output
