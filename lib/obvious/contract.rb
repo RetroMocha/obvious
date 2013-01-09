@@ -1,7 +1,7 @@
 class Contract
   @@disable_override = false
 
-  # This method needs to exist because the method_added bit looks for it. 
+  # This method needs to exist because the method_added bit looks for it.
   # It intentionally returns an empty array
   def self.contracts
     []
@@ -9,7 +9,7 @@ class Contract
 
   # This method will move methods defined in self.contracts into new methods.
   # Each entry in self.contracts will cause the method with the same name to
-  # become method_name_alias and for the original method to point to 
+  # become method_name_alias and for the original method to point to
   # method_name_contract.
   def self.method_added name
     unless @@disable_override
@@ -18,7 +18,7 @@ class Contract
           method_alias = "#{method}_alias".to_sym
           method_contract = "#{method}_contract".to_sym
 
-          @@disable_override = true # to stop the new build method 
+          @@disable_override = true # to stop the new build method
           self.send :alias_method, method_alias, name
           self.send :remove_method, name
           self.send :alias_method, name, method_contract
@@ -33,17 +33,17 @@ class Contract
   end
 
   # This method is used as a shorthand to mak the contract method calling pattern more DRY
-  # It starts by checking if you are sending in input and if so will check the input shape for 
+  # It starts by checking if you are sending in input and if so will check the input shape for
   # errors. If no errors are found it calls the method via the passed in symbol(method).
   #
   # Output checking is more complicated because of the types of output we check for. Nil is
-  # never valid output. If we pass in the output shape of true, that means we are looking for 
+  # never valid output. If we pass in the output shape of true, that means we are looking for
   # result to be the object True. If the output shape is an array, that is actually a shorthand
   # for telling our output check to look at the output as an array and compare it to the shape
   # stored in output_shape[0]. If we pass in the symbol :true_false it means we are looking for
   # the result to be either true or false. The default case will just check if result has the shape
   # of the output_shape.
-  def call_method method, input, input_shape, output_shape 
+  def call_method method, input, input_shape, output_shape
     if input != nil && input_shape != nil
       unless input.has_shape? input_shape
         raise ContractInputError, 'incorrect input data format'
@@ -70,23 +70,23 @@ class Contract
     end
 
     # we want to check the shape of each item in the result array
-    if output_shape.class == Array 
+    if output_shape.class == Array
       if result.class == Array
         inner_shape = output_shape[0]
         result.each do |item|
           unless item.has_shape? inner_shape
             raise ContractOutputError, 'incorrect output data format'
           end
-        end       
- 
-        return result 
-      end  
-      raise ContractOutputError, 'incorrect output data format'
-    end    
+        end
 
-    # we want result to be true or false 
+        return result
+      end
+      raise ContractOutputError, 'incorrect output data format'
+    end
+
+    # we want result to be true or false
     if output_shape == :true_false
-      unless result == true || result == false 
+      unless result == true || result == false
         raise ContractOutputError, 'incorrect output data format'
       end
 
@@ -122,8 +122,10 @@ class Hash
       return shape.empty?
     end
 
-    all? do |k, v|
-      Hash === v ? v.has_shape?(shape[k]) : shape[k] === v
+    shape.all? do |k, v|
+      # hash_value
+      hv = self[k]
+      Hash === hv ? hv.has_shape?(v) : v === hv
     end
   end
 end
