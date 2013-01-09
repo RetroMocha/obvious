@@ -249,10 +249,8 @@ jacks.each do |k, v|
 require 'obvious'
 
 class #{k}Contract < Contract
-  def self.contracts
-    #{v.to_s}
-  end
-#{method_definitions}
+  contracts :#{v.join(', :')}
+  #{method_definitions}
 end
 FIN
 
@@ -272,7 +270,7 @@ end
 
 FIN
 
-  filename = "#{app_dir}/spec/contracts/#{snake_name}_jack_contract_spec.rb"
+  filename = "#{app_dir}/spec/contracts/#{snake_name}_jack_spec.rb"
   File.open(filename, 'w') {|f| f.write(output) }
 
   #puts output
