@@ -140,8 +140,10 @@ class Hash
       return shape.empty?
     end
 
-    all? do |k, v|
-      Hash === v ? v.has_shape?(shape[k]) : shape[k] === v
+    shape.all? do |k, v|
+      # hash_value
+      hv = self[k]
+      Hash === hv ? hv.has_shape?(v) : v === hv
     end
   end
 end
