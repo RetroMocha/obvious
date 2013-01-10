@@ -20,7 +20,7 @@ class Contract
   #
   # Returns Nothing.
   def self.contracts *contracts
-     singleton_class.send :define_method, :contract_list do
+    singleton_class.send :define_method, :contract_list do
       contracts
     end
   end
