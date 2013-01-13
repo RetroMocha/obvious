@@ -50,6 +50,12 @@ module Obvious
             method_specs  = ''
             method_defs   = ''
 
+            method_defs << '
+  def self.shape
+    {}
+  end
+  '
+
             v.each do |method|
               method_defs << "
   def #{method} input
