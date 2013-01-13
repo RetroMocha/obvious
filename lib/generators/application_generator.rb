@@ -1,4 +1,3 @@
-require 'fileutils'
 require 'yaml'
 
 require_relative 'helpers/application'
@@ -18,7 +17,7 @@ module Obvious
             '/spec/doubles']
 
           puts 'Creating rakefile...'
-          FileUtils.cp "#{@app.lib_path}/obvious/files/Rakefile" , "#{@app.target_path}/Rakefile"
+          `cp #{@app.lib_path}/obvious/files/Rakefile #{@app.target_path}/Rakefile`
 
           descriptors = Dir['descriptors/*.yml']
 
