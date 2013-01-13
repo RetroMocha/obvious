@@ -63,7 +63,7 @@ class #{action['Action']}
   def initialize #{jacks_data[:inputs]}
 #{jacks_data[:assignments]}  end
 
-  def do input
+  def execute input
 #{@code}  end
 end
 }
