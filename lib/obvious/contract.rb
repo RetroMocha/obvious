@@ -25,6 +25,34 @@ class Contract
     end
   end
 
+  # Public: Defines a contract for a method
+  #
+  # method - a symbol representing the method name
+  # contract - a hash with the keys :input and :output holding the respective shapes.
+  #
+  # Examples
+  #
+  #   class FooJackContract < Contract
+  #
+  #     contract_for :save, {
+  #       :input  => Foo.shape,
+  #       :output => Foo.shape,
+  #     }
+  #
+  #   end
+  #
+  def self.contract_for method, contract
+    method_alias    = "#{method}_alias".to_sym
+    method_contract = "#{method}_contract".to_sym
+
+    define_method method_contract do |*args|
+      input = args[0]
+      call_method method_alias, input, contract[:input], contract[:output]
+    end
+
+    contracts( *contract_list, method )
+  end
+
   # This method will move methods defined in @contracts into new methods.
   # Each entry in @contracts will cause the method with the same name to
   # become method_name_alias and for the original method to point to
