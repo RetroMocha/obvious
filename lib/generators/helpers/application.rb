@@ -5,7 +5,17 @@ module Obvious
     class Application
       include Singleton
 
-      attr_reader :jacks, :entities
+      attr_reader :jacks, :entities, :dir
+
+      def initialize
+        @dir = 'app'
+
+        counter = 1
+        while File.directory? @dir
+          @dir = "app_#{counter}"
+          counter += 1
+        end
+      end
 
       def jacks
         @jacks ||= {}
@@ -13,10 +23,6 @@ module Obvious
 
       def entities
         @entities ||= {}
-      end
-
-      def dir
-        'app'
       end
 
       def target_path

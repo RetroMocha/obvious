@@ -16,8 +16,15 @@ module Obvious
             '/spec', '/spec/actions', '/spec/contracts', '/spec/entities',
             '/spec/doubles']
 
-          puts 'Creating rakefile...'
-          `cp #{@app.lib_path}/obvious/files/Rakefile #{@app.target_path}/Rakefile`
+          unless File.exist? "#{@app.target_path}/Rakefile" 
+            puts 'Creating Rakefile...'
+            `cp #{@app.lib_path}/obvious/files/Rakefile #{@app.target_path}/Rakefile`
+          end
+
+          unless File.exist? "#{@app.target_path}/external"
+            puts 'Creating external directory'
+            `cp -r #{@app.lib_path}/obvious/files/external #{@app.target_path}/external`
+          end
 
           descriptors = Dir['descriptors/*.yml']
 
