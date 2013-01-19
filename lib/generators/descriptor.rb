@@ -72,6 +72,20 @@ end
 
         filename = "#{Obvious::Generators::Application.instance.dir}/actions/#{snake_name}.rb"
         File.open(filename, 'w') {|f| f.write(output) }
+
+  output = %Q{require_relative '../../actions/#{snake_name}'
+
+describe #{action['Action']} do
+
+  it '#{action['Description']}'
+
+  it 'should raise an error with invalid input'
+
+end
+}
+
+  filename = "#{Obvious::Generators::Application.instance.dir}/spec/actions/#{snake_name}_spec.rb"
+  File.open(filename, 'w') {|f| f.write(output) }
       end
 
       def process_jacks
@@ -96,8 +110,8 @@ end
         entity_requires = ''
 
         @entities.each do |k, v|
-          name = k.downcase
-          entity_requires << "require_relative '../entities/#{name}'\n"
+          snake_name = k.gsub(/(.)([A-Z])/,'\1_\2').downcase
+          entity_requires << "require_relative '../entities/#{snake_name}'\n"
         end
 
         entity_requires
