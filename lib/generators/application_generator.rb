@@ -107,6 +107,9 @@ end
             method_specs = ''
             method_defs  = ''
 
+            jack_double_default_methods = ''
+            jack_double_badoutput_methods = ''
+
             v.each do |method|
 
               method_defs << "
@@ -125,6 +128,18 @@ end
 
     it 'should raise an error with invalid output'
 
+  end
+    "
+
+            jack_double_default_methods << "
+  def #{method} input
+    {}
+  end
+    "
+
+            jack_double_badoutput_methods << "
+  def #{method} input
+    nil
   end
     "
             end
@@ -151,6 +166,32 @@ end
 
             filename = "#{@app.dir}/spec/contracts/#{snake_name}_jack_spec.rb"
             File.open(filename, 'w') {|f| f.write(output) }
+
+            output = %Q{require_relative '../../contracts/#{snake_name}_jack_contract'
+
+class #{k}Double
+  def self.create behavior
+    case behavior
+    when :bad_output
+      #{k}_BadOutput.new
+    when :default
+      #{k}_Default.new
+    end
+  end
+end
+
+class #{k}_Default < #{k}Contract
+  #{jack_double_default_methods}
+end
+
+class #{k}_BadOutput < #{k}Contract
+  #{jack_double_badoutput_methods}
+end
+}
+
+            filename = "#{@app.dir}/spec/doubles/#{snake_name}_jack_double.rb"
+            File.open(filename, 'w') {|f| f.write(output) }
+
           end
         end # generate_jacks_code
       end
