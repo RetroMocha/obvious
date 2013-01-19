@@ -105,19 +105,18 @@ end
           @app.jacks.each do |k, v|
             name         = k.chomp('Jack').downcase
             method_specs = ''
-            method_defs  = ''
+            contract_defs  = ''
 
             jack_double_default_methods = ''
             jack_double_badoutput_methods = ''
 
             v.each do |method|
 
-              method_defs << "
-  def #{method}_contract input
-    input_shape = {}
-    output_shape = {}
-    call_method :#{method}_alias, input, input_shape, output_shape
-  end
+              contract_defs << "
+  contract_for :#{method}, {                                                                                                                                        
+    :input  => {},                                                                                                                                   
+    :output => {},                                                                                                                                   
+  } 
     "
 
               method_specs << "
@@ -147,8 +146,7 @@ end
             output = %Q{require 'obvious'
 
 class #{k}Contract < Contract
-  contracts :#{ v.join(', :')}
-  #{method_defs}
+  #{contract_defs}
 end
 }
 
