@@ -150,22 +150,22 @@ class #{k}Contract < Contract
 end
 }
 
-            snake_name = name.gsub(/(.)([A-Z])/,'\1_\2').downcase
+            snake_name = k.gsub(/(.)([A-Z])/,'\1_\2').downcase
 
-            filename = "#{@app.dir}/contracts/#{snake_name}_jack_contract.rb"
+            filename = "#{@app.dir}/contracts/#{snake_name}_contract.rb"
             File.open(filename, 'w') {|f| f.write(output) }
 
-            output = %Q{require_relative '../../contracts/#{snake_name}_jack_contract'
+            output = %Q{require_relative '../../contracts/#{snake_name}_contract'
 
 describe #{k}Contract do
   #{method_specs}
 end
 }
 
-            filename = "#{@app.dir}/spec/contracts/#{snake_name}_jack_spec.rb"
+            filename = "#{@app.dir}/spec/contracts/#{snake_name}_spec.rb"
             File.open(filename, 'w') {|f| f.write(output) }
 
-            output = %Q{require_relative '../../contracts/#{snake_name}_jack_contract'
+            output = %Q{require_relative '../../contracts/#{snake_name}_contract'
 
 class #{k}Double
   def self.create behavior
@@ -187,7 +187,7 @@ class #{k}_BadOutput < #{k}Contract
 end
 }
 
-            filename = "#{@app.dir}/spec/doubles/#{snake_name}_jack_double.rb"
+            filename = "#{@app.dir}/spec/doubles/#{snake_name}_double.rb"
             File.open(filename, 'w') {|f| f.write(output) }
 
           end
