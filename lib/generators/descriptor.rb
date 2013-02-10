@@ -4,6 +4,7 @@ require_relative 'helpers/application'
 
 module Obvious
   module Generators
+    class InvalidDescriptorFileError < StandardError; end
     class Descriptor
       def initialize descriptor
         @descriptor = descriptor
@@ -13,6 +14,8 @@ module Obvious
         action = YAML.load_file @descriptor
         @jacks, @entities = {}, {}
         @code = ''
+
+        raise InvalidDescriptorFileError unless action
 
         action['Code'].each do |entry|
           write_comments_for entry
