@@ -8,11 +8,42 @@ module Obvious
       subject {Descriptor.new(yaml_file)}
 
       describe "#to_file" do
-        
-        let( :yaml_file ) { "spec/fixtures/empty_descriptor.yml" }
+       
+        context "when the descriptor is empty" do
+          let( :yaml_file ) { {} }
 
-        it "should raise a meaningful error if no Code section in descriptor" do
-         expect {subject.to_file}.to raise_error(InvalidDescriptorFileError)
+          it "should raise a meaningful error" do
+           expect {subject.to_file}.to raise_error(InvalidDescriptorError)
+          end
+        end
+
+        context "when the 'Code' section is omitted" do
+          let( :yaml_file ) {
+            {"Action" => "Jackson", "Description" => "This is something"}
+          }
+
+          it "should raise a meaningful error" do
+            expect {subject.to_file}.to raise_error(InvalidDescriptorError)
+          end
+        end
+
+        context "when the 'Action' attribute is omitted" do
+          let( :yaml_file ) { 
+            {"Description" => "This is something", "Code" => {}}
+          }
+          it "should raise a meaningful error" do
+            expect {subject.to_file}.to raise_error(InvalidDescriptorError)
+          end
+        end
+
+        context "when the 'Action' attribute is omitted" do
+          let( :yaml_file ) { 
+            {"Action" => "Jackson", "Code" => {}}
+          }
+          it "should raise a meaningful error" do
+            expect {subject.to_file}.to raise_error(InvalidDescriptorError)
+          end
+
         end
       end
 
