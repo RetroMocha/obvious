@@ -71,12 +71,12 @@ class #{@descriptor['Action']}
 end
 }
 
-        snake_name = @action['Action'].gsub(/(.)([A-Z])/,'\1_\2').downcase
+        snake_name = @descriptor['Action'].gsub(/(.)([A-Z])/,'\1_\2').downcase
 
         filename = "#{Obvious::Generators::Application.instance.dir}/actions/#{snake_name}.rb"
         File.open(filename, 'w') {|f| f.write(output) }
 
-  output = %Q{require_relative '../../actions/#{snake_name}'
+        output = %Q{require_relative '../../actions/#{snake_name}'
 
 describe #{@descriptor['Action']} do
 
@@ -85,10 +85,10 @@ describe #{@descriptor['Action']} do
   it 'should raise an error with invalid input'
 
 end
-}
+        }
 
-  filename = "#{Obvious::Generators::Application.instance.dir}/spec/actions/#{snake_name}_spec.rb"
-  File.open(filename, 'w') {|f| f.write(output) }
+        filename = "#{Obvious::Generators::Application.instance.dir}/spec/actions/#{snake_name}_spec.rb"
+        File.open(filename, 'w') {|f| f.write(output) }
       end
 
       def process_jacks
