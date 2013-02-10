@@ -17,36 +17,18 @@ module Obvious
           end
         end
 
-        context "when the 'Code' section is omitted" do
-          let( :yaml_file ) {
-            {"Action" => "Jackson", "Description" => "This is something"}
-          }
+        ["Action", "Code", "Description"].each do |section|
+          context "when the '#{section}' section is omitted" do
+            let( :yaml_file ) {
+              {"Action" => "Jackson", "Description" => "This is something"}.delete(section)
+            }
 
-          it "should raise a meaningful error" do
-            expect {subject.to_file}.to raise_error(InvalidDescriptorError)
+            it "should raise a meaningful error" do
+              expect {subject.to_file}.to raise_error(InvalidDescriptorError)
+            end
           end
-        end
-
-        context "when the 'Action' attribute is omitted" do
-          let( :yaml_file ) { 
-            {"Description" => "This is something", "Code" => {}}
-          }
-          it "should raise a meaningful error" do
-            expect {subject.to_file}.to raise_error(InvalidDescriptorError)
-          end
-        end
-
-        context "when the 'Action' attribute is omitted" do
-          let( :yaml_file ) { 
-            {"Action" => "Jackson", "Code" => {}}
-          }
-          it "should raise a meaningful error" do
-            expect {subject.to_file}.to raise_error(InvalidDescriptorError)
-          end
-
         end
       end
-
     end
   end
 end

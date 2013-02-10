@@ -8,17 +8,16 @@ module Obvious
 
     class Descriptor
       def initialize descriptor
-        @action = descriptor
+        @descriptor = descriptor
       end
 
       def to_file
-        validate_action
+        validate_descriptor
         
         @jacks, @entities = {}, {}
         @code = ''
 
-
-        @action['Code'].each do |entry|
+        @descriptor['Code'].each do |entry|
           write_comments_for entry
           process_requirements_for entry if entry['requires']
         end
@@ -62,7 +61,7 @@ module Obvious
         requirements = require_entities
 
         output = %Q{#{requirements}
-class #{action['Action']}
+class #{@descriptor['Action']}
 
   def initialize #{jacks_data[:inputs]}
 #{jacks_data[:assignments]}  end
@@ -79,9 +78,9 @@ end
 
   output = %Q{require_relative '../../actions/#{snake_name}'
 
-describe #{@action['Action']} do
+describe #{@descriptor['Action']} do
 
-  it '#{@action['Description']}'
+  it '#{@descriptor['Description']}'
 
   it 'should raise an error with invalid input'
 
@@ -121,11 +120,11 @@ end
         entity_requires
       end
 
-      def validate_action
-        raise InvalidDescriptorError unless @action
-        raise InvalidDescriptorError if @action['Code'].nil?
-        raise InvalidDescriptorError if @action['Action'].nil?
-        raise InvalidDescriptorError if @action['Description'].nil?
+      def validate_descriptor
+        raise InvalidDescriptorError unless @descriptor
+        raise InvalidDescriptorError if @descriptor['Code'].nil?
+        raise InvalidDescriptorError if @descriptor['Action'].nil?
+        raise InvalidDescriptorError if @descriptor['Description'].nil?
       end
     end # ::Descriptor
   end
