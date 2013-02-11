@@ -30,7 +30,8 @@ module Obvious
 
           puts 'Creating actions from descriptors... ' unless descriptors.length.zero?
           descriptors.each do |file|
-            descriptor = Obvious::Generators::Descriptor.new file
+            yaml = YAML.load_file(file)
+            descriptor = Obvious::Generators::Descriptor.new yaml
             descriptor.to_file
           end
 
