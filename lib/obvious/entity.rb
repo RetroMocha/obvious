@@ -25,17 +25,12 @@ module Obvious
         @validations << name 
         define_method(name) { instance_exec &method }
       end
-
-      def to_hash
-        hash = {}
-        @values.each do |k, v| 
-          hash[k] = v
-        end 
-        hash
-      end
-
     end
   end
+
+  class ShapeError < StandardError; end
+  class TypeError < StandardError; end
+  class ValidationError < StandardError; end
 
   class Entity
     include EntityMixin
@@ -47,23 +42,30 @@ module Obvious
       @values = {}
       input.each do |k, v|
         unless shape[k]
-          raise StandardError.new "Invalid input field: #{k}" 
+          raise Obvious::ShapeError.new "Invalid input field: #{k}" 
         else
           @values[k] = v
         end
       end 
-
-      freeze
       
+      freeze
+      @values.freeze # this might need to be recursive?
+
       shape.each do |k, v|
         unless @values[k].class == v
           msg = "Validation Error: Invalid value for #{k}, should be a #{v}"
-          raise StandardError.new msg 
+          raise Obvious::TypeError.new msg 
         end
       end
 
       validations.each { |method| send method } 
+
+      self
     end 
+
+    def to_hash
+      {}.tap {|h| @values.each { |k, v| h[k] = v } }
+    end
 
   end
 end
