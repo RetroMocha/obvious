@@ -38,6 +38,9 @@ module Obvious
     def initialize input
       shape = self.class.shape
       validations = self.class.validations || []
+      
+      self.class.shape.freeze
+      self.class.validations.freeze
 
       @values = {}
       input.each do |k, v|
@@ -48,7 +51,6 @@ module Obvious
         end
       end 
       
-      freeze
       @values.freeze # this might need to be recursive?
 
       shape.each do |k, v|
@@ -60,7 +62,7 @@ module Obvious
 
       validations.each { |method| send method } 
 
-      self
+      freeze
     end 
 
     def to_hash
