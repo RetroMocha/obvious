@@ -91,8 +91,9 @@ class Contract
   # of the output_shape.
   def call_method method, input, input_shape, output_shape
     if input != nil && input_shape != nil
-      unless input.has_shape? input_shape
-        raise ContractInputError, 'incorrect input data format'
+      has_shape, error_field = input.has_shape? input_shape
+      unless has_shape 
+        raise ContractInputError, "incorrect input data format field #{error_field}"
       end
 
       result = self.send method, input
@@ -120,8 +121,9 @@ class Contract
       if result.class == Array
         inner_shape = output_shape[0]
         result.each do |item|
-          unless item.has_shape? inner_shape
-            raise ContractOutputError, 'incorrect output data format'
+          has_shape, error_field = item.has_shape? inner_shape 
+          unless has_shape 
+            raise ContractOutputError, "incorrect output data format field #{error_field}"
           end
         end
 
@@ -140,8 +142,9 @@ class Contract
     end
 
     # we want result to be output_shape's shape
-    unless result.has_shape? output_shape
-      raise ContractOutputError, 'incorrect output data format'
+    has_shape, error_field = result.has_shape? output_shape 
+    unless has_shape 
+      raise ContractOutputError, "incorrect output data format field #{error_field}"
     end
 
     result
@@ -165,15 +168,30 @@ class Hash
   def has_shape?(shape)
     # I added an empty check
     if self.empty?
-      return shape.empty?
-    end
+      return shape.empty?, nil
+    end  
+ 
+    self.each do |k, v|
+      return false, k if shape[k] == nil
+    end 
 
-    shape.all? do |k, v|
+    shape.each do |k, v|
       # hash_value
       hv = self[k]
-      Hash === hv ? hv.has_shape?(v) : v === hv
+      return false, k unless self.has_key? k 
+
+      next if hv === nil
+
+      if Hash === hv 
+        return hv.has_shape?(v) 
+      else
+        return false, k unless v === hv
+      end
     end
+
+    return true, nil
   end
+
 end
 
 class ContractInputError < StandardError
@@ -181,3 +199,4 @@ end
 
 class ContractOutputError < StandardError
 end
+
