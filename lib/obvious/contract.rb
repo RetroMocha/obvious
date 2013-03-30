@@ -91,8 +91,9 @@ class Contract
   # of the output_shape.
   def call_method method, input, input_shape, output_shape
     if input != nil && input_shape != nil
-      unless input.has_shape? input_shape
-        raise ContractInputError, 'incorrect input data format'
+      has_shape, error_field = input.has_shape? input_shape, true
+      unless has_shape 
+        raise ContractInputError, "incorrect input data format field #{error_field}"
       end
 
       result = self.send method, input
@@ -120,8 +121,9 @@ class Contract
       if result.class == Array
         inner_shape = output_shape[0]
         result.each do |item|
-          unless item.has_shape? inner_shape
-            raise ContractOutputError, 'incorrect output data format'
+          has_shape, error_field = item.has_shape? inner_shape, true
+          unless has_shape 
+            raise ContractOutputError, "incorrect output data format field #{error_field}"
           end
         end
 
@@ -140,8 +142,9 @@ class Contract
     end
 
     # we want result to be output_shape's shape
-    unless result.has_shape? output_shape
-      raise ContractOutputError, 'incorrect output data format'
+    has_shape, error_field = result.has_shape? output_shape, true
+    unless has_shape 
+      raise ContractOutputError, "incorrect output data format field #{error_field}"
     end
 
     result
@@ -162,18 +165,41 @@ class Hash
   #     shape = { k1: Array, k2: { k3: Module } }
   #     h.has_shape?(shape)
   #     #=> true
-  def has_shape?(shape)
+  def has_shape?(shape, return_field = false)
+    return_value = lambda { |r, f|
+      if return_field
+        return r, f
+      else
+        return r 
+      end
+    }
+ 
     # I added an empty check
     if self.empty?
-      return shape.empty?
-    end
+      return return_value.call shape.empty?, nil
+    end  
+ 
+    self.each do |k, v|
+      return return_value.call false, k if shape[k] == nil
+    end 
 
-    shape.all? do |k, v|
+    shape.each do |k, v|
       # hash_value
       hv = self[k]
-      Hash === hv ? hv.has_shape?(v) : v === hv
+      return return_value.call false, k unless self.has_key? k 
+
+      next if hv === nil
+
+      if Hash === hv 
+        return hv.has_shape?(v, return_field) 
+      else
+        return return_value.call false, k unless v === hv
+      end
     end
+
+    return_value.call true, nil
   end
+
 end
 
 class ContractInputError < StandardError
@@ -181,3 +207,4 @@ end
 
 class ContractOutputError < StandardError
 end
+

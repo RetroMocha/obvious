@@ -1,4 +1,4 @@
-require 'obvious'
+require_relative '../lib/obvious/entity'
 
 class Thing < Obvious::Entity
   value :id, Fixnum 
