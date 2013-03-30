@@ -107,6 +107,10 @@ class Contract
       raise ContractOutputError, 'incorrect output data format'
     end
 
+    if result === {}
+      raise DataNotFoundError, 'data was not found'
+    end
+
     # we are looking for result to be a True object
     if output_shape === true
       if output_shape == result
@@ -206,5 +210,8 @@ class ContractInputError < StandardError
 end
 
 class ContractOutputError < StandardError
+end
+
+class DataNotFoundError < StandardError
 end
 
