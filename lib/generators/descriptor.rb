@@ -4,22 +4,25 @@ require_relative 'helpers/application'
 
 module Obvious
   module Generators
+    class InvalidDescriptorError < StandardError; end
+
     class Descriptor
       def initialize descriptor
         @descriptor = descriptor
       end
 
       def to_file
-        action = YAML.load_file @descriptor
+        validate_descriptor
+        
         @jacks, @entities = {}, {}
         @code = ''
 
-        action['Code'].each do |entry|
+        @descriptor['Code'].each do |entry|
           write_comments_for entry
           process_requirements_for entry if entry['requires']
         end
 
-        write_action action
+        write_action
       end
 
       private
@@ -53,12 +56,12 @@ module Obvious
         end
       end # #process_requirements_for
 
-      def write_action action
+      def write_action
         jacks_data   = process_jacks
         requirements = require_entities
 
         output = %Q{#{requirements}
-class #{action['Action']}
+class #{@descriptor['Action']}
 
   def initialize #{jacks_data[:inputs]}
 #{jacks_data[:assignments]}  end
@@ -68,24 +71,24 @@ class #{action['Action']}
 end
 }
 
-        snake_name = action['Action'].gsub(/(.)([A-Z])/,'\1_\2').downcase
+        snake_name = @descriptor['Action'].gsub(/(.)([A-Z])/,'\1_\2').downcase
 
         filename = "#{Obvious::Generators::Application.instance.dir}/actions/#{snake_name}.rb"
         File.open(filename, 'w') {|f| f.write(output) }
 
-  output = %Q{require_relative '../../actions/#{snake_name}'
+        output = %Q{require_relative '../../actions/#{snake_name}'
 
-describe #{action['Action']} do
+describe #{@descriptor['Action']} do
 
-  it '#{action['Description']}'
+  it '#{@descriptor['Description']}'
 
   it 'should raise an error with invalid input'
 
 end
-}
+        }
 
-  filename = "#{Obvious::Generators::Application.instance.dir}/spec/actions/#{snake_name}_spec.rb"
-  File.open(filename, 'w') {|f| f.write(output) }
+        filename = "#{Obvious::Generators::Application.instance.dir}/spec/actions/#{snake_name}_spec.rb"
+        File.open(filename, 'w') {|f| f.write(output) }
       end
 
       def process_jacks
@@ -115,6 +118,13 @@ end
         end
 
         entity_requires
+      end
+
+      def validate_descriptor
+        raise InvalidDescriptorError unless @descriptor
+        raise InvalidDescriptorError if @descriptor['Code'].nil?
+        raise InvalidDescriptorError if @descriptor['Action'].nil?
+        raise InvalidDescriptorError if @descriptor['Description'].nil?
       end
     end # ::Descriptor
   end
