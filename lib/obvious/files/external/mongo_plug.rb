@@ -1,5 +1,10 @@
 require 'moped'
 
+# To get the mongo system to work you need to have a counters collection. The
+# code here will increment the seq field which we use to set the id. If you are
+# having problems, you probably need to create the collection and add entries
+# for each other collection you want to have an id sequence.
+
 class MongoPlug
   def initialize collection
     @collection = collection
