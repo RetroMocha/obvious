@@ -6,13 +6,19 @@ class FsPlug
     @filename = filename
   end
 
-  def save input
-    # open the file
+  def load_data
     contents = File.read @filename
+    JSON.parse contents, :symbolize_names => true
+  end
 
+  def save_data input
+    json_data = JSON.pretty_generate input 
+    File.open(@filename, 'w') {|f| f.write(json_data) }
+  end
+
+  def save input
     data = []
-    # parse the json list
-    query = JSON.parse contents, :symbolize_names => true
+    query = load_data 
 
     new_element = true if input[:id] == -1 # by convention set new element flag if id == -1
 
@@ -27,51 +33,37 @@ class FsPlug
     end
 
     # add data to the list if it's a new element 
-    input[:id] = max_id + 1
-    data << input if new_element
+    if new_element 
+      input[:id] = max_id + 1
+      data << input 
+    end
 
-    # save the data back to FS
-    json_data = JSON.pretty_generate data 
-    File.open(@filename, 'w') {|f| f.write(json_data) }
+    save_data data
 
     # return the transformed data
     input
   end
 
   def list
-    # open the file
-    contents = File.read @filename
-
-    # parse the json list
-    data = JSON.parse contents, :symbolize_names => true
-    
-    # return the transformed data
-    data 
+    load_data
   end
   
   def get input
-    # open the file
-    contents = File.read @filename
-
     data = []
-    # parse the json list
-    query = JSON.parse contents, :symbolize_names => true
+    query = load_data 
 
     # transform the data if needed
     query.each do |h|
       return h if h[:id] == input[:id]
     end 
 
-    {} 
+    raise Exception.new 'no object found'
   end
 
   def remove input
-    # open the file
-    contents = File.read @filename
-
     data = []
     # parse the json list
-    query = JSON.parse contents, :symbolize_names => true
+    query = load_data 
 
     # transform the data if needed
     query.each do |h|
@@ -80,15 +72,28 @@ class FsPlug
       end
     end
 
-    # save the data back to FS
-    json_data = JSON.pretty_generate data 
-    File.open(@filename, 'w') {|f| f.write(json_data) }
+    save_data data
 
     # return true on success
     true 
   end
 
+  def find input
+    data = []
+    query = load_data 
+ 
+    key = input.keys[0] 
+ 
+    query.each do |h|
+      if input[key] == h[key]
+        return h
+      end
+    end 
+
+    raise Exception.new 'no object found'
+  end
 end
+
 
 
 
