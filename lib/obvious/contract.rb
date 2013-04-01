@@ -204,6 +204,13 @@ class Hash
     return_value.call true, nil
   end
 
+  def nil_fields? list
+    list.each do |field|
+      return true, field unless self[field]
+    end  
+    
+    return false, nil
+  end
 end
 
 class ContractInputError < StandardError
