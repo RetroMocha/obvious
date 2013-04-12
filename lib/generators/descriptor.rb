@@ -9,6 +9,7 @@ module Obvious
     class Descriptor
       def initialize descriptor
         @descriptor = descriptor
+        @app        = Obvious::Generators::Application.instance
       end
 
       def to_file
@@ -33,7 +34,6 @@ module Obvious
       end
 
       def process_requirements_for entry
-        app      = Obvious::Generators::Application.instance
         requires = entry['requires'].split ','
 
         requires.each do |req|
@@ -41,16 +41,16 @@ module Obvious
           infos = req.split '.'
 
           if infos[0].index 'Jack'
-            app.jacks[infos[0]] = [] unless app.jacks[infos[0]]
+            @app.jacks[infos[0]] = [] unless @app.jacks[infos[0]]
             @jacks[infos[0]]    = [] unless @jacks[infos[0]]
 
-            app.jacks[infos[0]] << infos[1]
+            @app.jacks[infos[0]] << infos[1]
             @jacks[infos[0]] << infos[1]
           else
-            app.entities[infos[0]] = [] unless app.entities[infos[0]]
+            @app.entities[infos[0]] = [] unless @app.entities[infos[0]]
             @entities[infos[0]]    = [] unless @entities[infos[0]]
 
-            app.entities[infos[0]] << infos[1]
+            @app.entities[infos[0]] << infos[1]
             @entities[infos[0]] << infos[1]
           end
         end
