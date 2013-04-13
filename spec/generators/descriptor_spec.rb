@@ -33,12 +33,15 @@ module Obvious
 
         context "when a valid code section is provided" do
 
-          let( :yaml_file ) {
-            code = [ { 'c' => 'some text describing what I should do' } ]
+          before do
             Dir.mkdir("app")
             Dir.mkdir("app/actions")
             Dir.mkdir("app/spec")
             Dir.mkdir("app/spec/actions")
+          end
+
+          let( :yaml_file ) {
+            code = [ { 'c' => 'some text describing what I should do' } ]
             { "Action" => "Jackson", "Description" => "This is something", "Code" => code }
           }
 
@@ -84,6 +87,11 @@ end
         context "when requires are provided with no methods" do
 
           before do
+            Dir.mkdir("app")
+            Dir.mkdir("app/actions")
+            Dir.mkdir("app/spec")
+            Dir.mkdir("app/spec/actions")
+
             @application = stub(jacks: {}, entities: {}, dir: 'app')
             Obvious::Generators::Application.stubs(:instance).returns @application
           end
@@ -91,10 +99,6 @@ end
           let( :yaml_file ) {
             requires = "apple, orange"
             code = [ { 'c' => 'some text describing what I should do', 'requires' => requires } ]
-            Dir.mkdir("app")
-            Dir.mkdir("app/actions")
-            Dir.mkdir("app/spec")
-            Dir.mkdir("app/spec/actions")
             { "Action" => "Jackson", "Description" => "This is something", "Code" => code }
           }
 
@@ -138,6 +142,11 @@ EOF
         context "when requires are provided with methods" do
 
           before do
+            Dir.mkdir("app")
+            Dir.mkdir("app/actions")
+            Dir.mkdir("app/spec")
+            Dir.mkdir("app/spec/actions")
+
             @application = stub(jacks: {}, entities: {}, dir: 'app')
             Obvious::Generators::Application.stubs(:instance).returns @application
           end
@@ -145,10 +154,6 @@ EOF
           let( :yaml_file ) {
             requires = "apple.slice, orange.crush"
             code = [ { 'c' => 'some text describing what I should do', 'requires' => requires } ]
-            Dir.mkdir("app")
-            Dir.mkdir("app/actions")
-            Dir.mkdir("app/spec")
-            Dir.mkdir("app/spec/actions")
             { "Action" => "Jackson", "Description" => "This is something", "Code" => code }
           }
 
@@ -192,6 +197,11 @@ EOF
         context "when the same entity has two requires" do
 
           before do
+            Dir.mkdir("app")
+            Dir.mkdir("app/actions")
+            Dir.mkdir("app/spec")
+            Dir.mkdir("app/spec/actions")
+
             @application = stub(jacks: {}, entities: {}, dir: 'app')
             Obvious::Generators::Application.stubs(:instance).returns @application
           end
@@ -199,10 +209,6 @@ EOF
           let( :yaml_file ) {
             requires = "apple.slice, apple.juice"
             code = [ { 'c' => 'some text describing what I should do', 'requires' => requires } ]
-            Dir.mkdir("app")
-            Dir.mkdir("app/actions")
-            Dir.mkdir("app/spec")
-            Dir.mkdir("app/spec/actions")
             { "Action" => "Jackson", "Description" => "This is something", "Code" => code }
           }
 
@@ -241,6 +247,11 @@ EOF
         context "when requires have jacks" do
 
           before do
+            Dir.mkdir("app")
+            Dir.mkdir("app/actions")
+            Dir.mkdir("app/spec")
+            Dir.mkdir("app/spec/actions")
+
             @application = stub(jacks: {}, entities: {}, dir: 'app')
             Obvious::Generators::Application.stubs(:instance).returns @application
           end
@@ -248,11 +259,6 @@ EOF
           let( :yaml_file ) {
             requires = "StatusJack.a_method_on_a_jack_that_you_need, Status.another_method_you_will_need"
             code = [ { 'c' => 'some text describing what I should do', 'requires' => requires } ]
-            Dir.mkdir("app")
-            Dir.mkdir("app/actions")
-            Dir.mkdir("app/spec")
-            Dir.mkdir("app/spec/actions")
-
             { "Action" => "Jackson", "Description" => "This is something", "Code" => code }
           }
 
