@@ -18,6 +18,14 @@ module Obvious
            expect {subject.to_file}.to raise_error(InvalidDescriptorError)
           end
         end
+       
+        context "when the descriptor is nil" do
+          let( :yaml_file ) { nil }
+
+          it "should raise a meaningful error" do
+           expect {subject.to_file}.to raise_error(InvalidDescriptorError)
+          end
+        end
 
         ["Action", "Description", "Code"].each do |section|
           context "when the '#{section}' section is omitted" do
