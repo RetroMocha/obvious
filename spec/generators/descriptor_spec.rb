@@ -63,6 +63,21 @@ end
 EOF
 )
           end
+
+          it "should write a jackson action spec file" do
+            subject.to_file
+            content = File.read('app/spec/actions/jackson_spec.rb')
+            expect(content).to(eq "require_relative '../../actions/jackson'
+
+describe Jackson do
+
+  it 'This is something'
+
+  it 'should raise an error with invalid input'
+
+end
+        ")
+          end
         end
       end
     end
