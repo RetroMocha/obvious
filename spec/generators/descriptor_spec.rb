@@ -34,10 +34,7 @@ module Obvious
         context "when a valid code section is provided" do
 
           before do
-            Dir.mkdir("app")
-            Dir.mkdir("app/actions")
-            Dir.mkdir("app/spec")
-            Dir.mkdir("app/spec/actions")
+            create_directories_necessary_for_descriptors
           end
 
           let( :yaml_file ) {
@@ -87,10 +84,7 @@ end
         context "when requires are provided with no methods" do
 
           before do
-            Dir.mkdir("app")
-            Dir.mkdir("app/actions")
-            Dir.mkdir("app/spec")
-            Dir.mkdir("app/spec/actions")
+            create_directories_necessary_for_descriptors
 
             @application = stub(jacks: {}, entities: {}, dir: 'app')
             Obvious::Generators::Application.stubs(:instance).returns @application
@@ -142,10 +136,7 @@ EOF
         context "when requires are provided with methods" do
 
           before do
-            Dir.mkdir("app")
-            Dir.mkdir("app/actions")
-            Dir.mkdir("app/spec")
-            Dir.mkdir("app/spec/actions")
+            create_directories_necessary_for_descriptors
 
             @application = stub(jacks: {}, entities: {}, dir: 'app')
             Obvious::Generators::Application.stubs(:instance).returns @application
@@ -197,10 +188,7 @@ EOF
         context "when the same entity has two requires" do
 
           before do
-            Dir.mkdir("app")
-            Dir.mkdir("app/actions")
-            Dir.mkdir("app/spec")
-            Dir.mkdir("app/spec/actions")
+            create_directories_necessary_for_descriptors
 
             @application = stub(jacks: {}, entities: {}, dir: 'app')
             Obvious::Generators::Application.stubs(:instance).returns @application
@@ -247,10 +235,7 @@ EOF
         context "when requires have jacks" do
 
           before do
-            Dir.mkdir("app")
-            Dir.mkdir("app/actions")
-            Dir.mkdir("app/spec")
-            Dir.mkdir("app/spec/actions")
+            create_directories_necessary_for_descriptors
 
             @application = stub(jacks: {}, entities: {}, dir: 'app')
             Obvious::Generators::Application.stubs(:instance).returns @application
