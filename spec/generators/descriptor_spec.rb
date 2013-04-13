@@ -32,6 +32,7 @@ module Obvious
         end
 
         context "when a valid code section is provided" do
+
           let( :yaml_file ) {
             code = [ { 'c' => 'some text describing what I should do' } ]
             Dir.mkdir("app")
@@ -80,7 +81,13 @@ end
           end
         end
 
-        context "when requires are provided" do
+        context "when requires are provided with no methods" do
+
+          before do
+            @application = stub(jacks: {}, entities: {}, dir: 'app')
+            Obvious::Generators::Application.stubs(:instance).returns @application
+          end
+
           let( :yaml_file ) {
             requires = "apple, orange"
             code = [ { 'c' => 'some text describing what I should do', 'requires' => requires } ]
@@ -115,6 +122,16 @@ class Jackson
 end
 EOF
 )
+          end
+
+          it "should set no jacks" do
+            subject.to_file
+            expect(@application.jacks).to eq({})
+          end
+
+          it "should set the entities" do
+            subject.to_file
+            expect(@application.entities).to eq({"apple"=>[nil], "orange"=>[nil]})
           end
         end
         
