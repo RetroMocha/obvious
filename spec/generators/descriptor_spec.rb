@@ -46,9 +46,9 @@ module Obvious
           end
 
           it "should write a jackson action file" do
-              subject.to_file
-              content = File.read('app/actions/jackson.rb')
-              expect(content).to(eq <<EOF
+            subject.to_file
+            content = File.read('app/actions/jackson.rb')
+            expect(content).to(eq <<EOF
 
 class Jackson
 
