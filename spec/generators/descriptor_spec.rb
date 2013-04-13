@@ -134,6 +134,60 @@ EOF
             expect(@application.entities).to eq({"apple"=>[nil], "orange"=>[nil]})
           end
         end
+
+        context "when requires are provided with methods" do
+
+          before do
+            @application = stub(jacks: {}, entities: {}, dir: 'app')
+            Obvious::Generators::Application.stubs(:instance).returns @application
+          end
+
+          let( :yaml_file ) {
+            requires = "apple.slice, orange.crush"
+            code = [ { 'c' => 'some text describing what I should do', 'requires' => requires } ]
+            Dir.mkdir("app")
+            Dir.mkdir("app/actions")
+            Dir.mkdir("app/spec")
+            Dir.mkdir("app/spec/actions")
+            { "Action" => "Jackson", "Description" => "This is something", "Code" => code }
+          }
+
+          it "should not error" do
+            subject.to_file
+          end
+
+          it "should write a jackson action file" do
+            subject.to_file
+            content = File.read('app/actions/jackson.rb')
+            expect(content).to(eq <<EOF
+require_relative '../entities/apple'
+require_relative '../entities/orange'
+
+class Jackson
+
+  def initialize 
+  end
+
+  def execute input
+    # some text describing what I should do
+    # use: apple.slice, orange.crush
+    
+  end
+end
+EOF
+)
+          end
+
+          it "should set no jacks" do
+            subject.to_file
+            expect(@application.jacks).to eq({})
+          end
+
+          it "should set the entities" do
+            subject.to_file
+            expect(@application.entities).to eq({"apple"=>['slice'], "orange"=>['crush']})
+          end
+        end
         
         context "when requires have jacks" do
 
