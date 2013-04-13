@@ -117,6 +117,44 @@ EOF
 )
           end
         end
+        
+        context "when requires have jacks" do
+          let( :yaml_file ) {
+            requires = "StatusJack.a_method_on_a_jack_that_you_need, Status.another_method_you_will_need"
+            code = [ { 'c' => 'some text describing what I should do', 'requires' => requires } ]
+            Dir.mkdir("app")
+            Dir.mkdir("app/actions")
+            Dir.mkdir("app/spec")
+            Dir.mkdir("app/spec/actions")
+            { "Action" => "Jackson", "Description" => "This is something", "Code" => code }
+          }
+
+          it "should not error" do
+            subject.to_file
+          end
+
+          it "should write a jackson action file" do
+            subject.to_file
+            content = File.read('app/actions/jackson.rb')
+            expect(content).to(eq <<EOF
+require_relative '../entities/status'
+
+class Jackson
+
+  def initialize status_jack
+    @status_jack = status_jack
+  end
+
+  def execute input
+    # some text describing what I should do
+    # use: StatusJack.a_method_on_a_jack_that_you_need, Status.another_method_you_will_need
+    
+  end
+end
+EOF
+)
+          end
+        end
       end
     end
   end
