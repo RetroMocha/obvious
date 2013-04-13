@@ -17,7 +17,7 @@ module Obvious
           end
         end
 
-        ["Action", "Code", "Description"].each do |section|
+        ["Action", "Description"].each do |section|
           context "when the '#{section}' section is omitted" do
             let( :yaml_file ) {
               {"Action" => "Jackson", "Description" => "This is something"}.delete(section)
