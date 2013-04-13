@@ -119,6 +119,12 @@ EOF
         end
         
         context "when requires have jacks" do
+
+          before do
+            @application = stub(jacks: {}, entities: {}, dir: 'app')
+            Obvious::Generators::Application.stubs(:instance).returns @application
+          end
+
           let( :yaml_file ) {
             requires = "StatusJack.a_method_on_a_jack_that_you_need, Status.another_method_you_will_need"
             code = [ { 'c' => 'some text describing what I should do', 'requires' => requires } ]
@@ -126,6 +132,7 @@ EOF
             Dir.mkdir("app/actions")
             Dir.mkdir("app/spec")
             Dir.mkdir("app/spec/actions")
+
             { "Action" => "Jackson", "Description" => "This is something", "Code" => code }
           }
 
@@ -153,6 +160,16 @@ class Jackson
 end
 EOF
 )
+          end
+
+          it "should set the jacks" do
+            subject.to_file
+            expect(@application.jacks["StatusJack"]).to eq(["a_method_on_a_jack_that_you_need"])
+          end
+
+          it "should set the entities" do
+            subject.to_file
+            expect(@application.entities['Status']).to eq(['another_method_you_will_need'])
           end
         end
       end
