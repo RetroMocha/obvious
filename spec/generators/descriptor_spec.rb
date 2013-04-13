@@ -44,6 +44,25 @@ module Obvious
           it "should not error" do
             subject.to_file
           end
+
+          it "should write a jackson action file" do
+              subject.to_file
+              content = File.read('app/actions/jackson.rb')
+              expect(content).to(eq <<EOF
+
+class Jackson
+
+  def initialize 
+  end
+
+  def execute input
+    # some text describing what I should do
+    
+  end
+end
+EOF
+)
+          end
         end
       end
     end
