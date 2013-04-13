@@ -19,13 +19,16 @@ module Obvious
           end
         end
 
-        ["Action", "Description"].each do |section|
+        ["Action", "Description", "Code"].each do |section|
           context "when the '#{section}' section is omitted" do
             let( :yaml_file ) {
-              {"Action" => "Jackson", "Description" => "This is something"}.delete(section)
+              code = [ { 'c' => 'some text describing what I should do' } ]
+              data = {"Action" => "Jackson", "Description" => "This is something", "Code" => code}
+              data.delete(section)
+              data
             }
 
-            it "should raise a meaningful error" do
+            it "should raise a meaningful error for missing #{section}" do
               expect {subject.to_file}.to raise_error(InvalidDescriptorError)
             end
           end
