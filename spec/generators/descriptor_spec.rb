@@ -188,6 +188,55 @@ EOF
             expect(@application.entities).to eq({"apple"=>['slice'], "orange"=>['crush']})
           end
         end
+
+        context "when the same entity has two requires" do
+
+          before do
+            @application = stub(jacks: {}, entities: {}, dir: 'app')
+            Obvious::Generators::Application.stubs(:instance).returns @application
+          end
+
+          let( :yaml_file ) {
+            requires = "apple.slice, apple.juice"
+            code = [ { 'c' => 'some text describing what I should do', 'requires' => requires } ]
+            Dir.mkdir("app")
+            Dir.mkdir("app/actions")
+            Dir.mkdir("app/spec")
+            Dir.mkdir("app/spec/actions")
+            { "Action" => "Jackson", "Description" => "This is something", "Code" => code }
+          }
+
+          it "should not error" do
+            subject.to_file
+          end
+
+          it "should write a jackson action file" do
+            subject.to_file
+            content = File.read('app/actions/jackson.rb')
+            expect(content).to(eq <<EOF
+require_relative '../entities/apple'
+
+class Jackson
+
+  def initialize 
+  end
+
+  def execute input
+    # some text describing what I should do
+    # use: apple.slice, apple.juice
+    
+  end
+end
+EOF
+)
+          end
+
+          it "should set the entities" do
+            subject.to_file
+            expect(@application.entities).to eq({"apple"=>['slice', 'juice']})
+          end
+        end
+        
         
         context "when requires have jacks" do
 
