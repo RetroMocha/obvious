@@ -50,14 +50,14 @@ describe Obvious::Obj do
 
     it 'should raise an error for invalid types' do
       expect { @test.defined_method with_foo: 1, also_bar: 12 }.to raise_error { |error|
-        error.should be_a ArgumentError 
-        error.message.should eq 'invalid type for with_foo expected String'
+        error.should be_a ArgumentError
+        error.message.should eq 'invalid type for with_foo expected: String, recieved: Fixnum'
       }
 
       expect {@test.defined_method with_foo: 'hello', also_bar: nil }.to raise_error { |error|
         error.should be_a ArgumentError
-        error.message.should eq 'invalid type for also_bar expected Fixnum'
-      } 
+        error.message.should eq 'invalid type for also_bar expected: Fixnum, recieved: NilClass'
+      }
     end
   end
 

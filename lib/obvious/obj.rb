@@ -17,8 +17,8 @@ module Obvious
             end 
 
             unless v.is_a? input[k][1]
-              raise ArgumentError.new "invalid type for #{k} expected #{input[k][1]}"
-            end 
+              raise ArgumentError.new "invalid type for #{k} expected: #{input[k][1]}, recieved: #{v.class}"
+            end
 
             block_input[input[k][0]] = v
           end
