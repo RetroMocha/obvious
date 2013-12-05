@@ -22,7 +22,7 @@ describe Hash do
   end
 end
 
-class TestContract < Contract
+class TestContract < Obvious::Contract
   contract_for :test, {
     input: { id: Fixnum },
     output: { id: Fixnum, value: String }
@@ -33,7 +33,7 @@ class TestContract < Contract
   end
 end
 
-describe Contract do
+describe Obvious::Contract do
 
   describe "#call_method" do
     it 'should return the correct output for valid input and output shapes' do
