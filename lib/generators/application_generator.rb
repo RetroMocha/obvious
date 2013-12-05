@@ -146,7 +146,7 @@ end
 
             output = %Q{require 'obvious'
 
-class #{k}Contract < Contract
+class #{k}Contract < Obvious::Contract
   #{contract_defs}
 end
 }
