@@ -5,6 +5,8 @@ require File.expand_path('spec/spec_helper')
 module Obvious
   module Generators
     describe Descriptor do
+      include FakeFS::SpecHelpers
+
       subject {Descriptor.new(yaml_file)}
 
       describe "#to_file" do
@@ -16,16 +18,280 @@ module Obvious
            expect {subject.to_file}.to raise_error(InvalidDescriptorError)
           end
         end
+       
+        context "when the descriptor is nil" do
+          let( :yaml_file ) { nil }
 
-        ["Action", "Code", "Description"].each do |section|
+          it "should raise a meaningful error" do
+           expect {subject.to_file}.to raise_error(InvalidDescriptorError)
+          end
+        end
+
+        ["Action", "Description", "Code"].each do |section|
           context "when the '#{section}' section is omitted" do
             let( :yaml_file ) {
-              {"Action" => "Jackson", "Description" => "This is something"}.delete(section)
+              code = [ { 'c' => 'some text describing what I should do' } ]
+              data = {"Action" => "Jackson", "Description" => "This is something", "Code" => code}
+              data.delete(section)
+              data
             }
 
-            it "should raise a meaningful error" do
+            it "should raise a meaningful error for missing #{section}" do
               expect {subject.to_file}.to raise_error(InvalidDescriptorError)
             end
+          end
+        end
+
+        context "when a valid code section is provided" do
+
+          before do
+            create_directories_necessary_for_descriptors
+          end
+
+          let( :yaml_file ) {
+            code = [ { 'c' => 'some text describing what I should do' } ]
+            { "Action" => "Jackson", "Description" => "This is something", "Code" => code }
+          }
+
+          it "should not error" do
+            subject.to_file
+          end
+
+          it "should write a jackson action file" do
+            subject.to_file
+            content = File.read('app/actions/jackson.rb')
+            expect(content).to(eq <<EOF
+
+class Jackson
+
+  def initialize 
+  end
+
+  def execute input
+    # some text describing what I should do
+    
+  end
+end
+EOF
+)
+          end
+
+          it "should write a jackson action spec file" do
+            subject.to_file
+            content = File.read('app/spec/actions/jackson_spec.rb')
+            expect(content).to(eq "require_relative '../../actions/jackson'
+
+describe Jackson do
+
+  it 'This is something'
+
+  it 'should raise an error with invalid input'
+
+end
+        ")
+          end
+        end
+
+        context "when requires are provided with no methods" do
+
+          before do
+            create_directories_necessary_for_descriptors
+
+            @application = stub(jacks: {}, entities: {}, dir: 'app')
+            Obvious::Generators::Application.stubs(:instance).returns @application
+          end
+
+          let( :yaml_file ) {
+            requires = "apple, orange"
+            code = [ { 'c' => 'some text describing what I should do', 'requires' => requires } ]
+            { "Action" => "Jackson", "Description" => "This is something", "Code" => code }
+          }
+
+          it "should not error" do
+            subject.to_file
+          end
+
+          it "should write a jackson action file" do
+            subject.to_file
+            content = File.read('app/actions/jackson.rb')
+            expect(content).to(eq <<EOF
+require_relative '../entities/apple'
+require_relative '../entities/orange'
+
+class Jackson
+
+  def initialize 
+  end
+
+  def execute input
+    # some text describing what I should do
+    # use: apple, orange
+    
+  end
+end
+EOF
+)
+          end
+
+          it "should set no jacks" do
+            subject.to_file
+            expect(@application.jacks).to eq({})
+          end
+
+          it "should set the entities" do
+            subject.to_file
+            expect(@application.entities).to eq({"apple"=>[nil], "orange"=>[nil]})
+          end
+        end
+
+        context "when requires are provided with methods" do
+
+          before do
+            create_directories_necessary_for_descriptors
+
+            @application = stub(jacks: {}, entities: {}, dir: 'app')
+            Obvious::Generators::Application.stubs(:instance).returns @application
+          end
+
+          let( :yaml_file ) {
+            requires = "apple.slice, orange.crush"
+            code = [ { 'c' => 'some text describing what I should do', 'requires' => requires } ]
+            { "Action" => "Jackson", "Description" => "This is something", "Code" => code }
+          }
+
+          it "should not error" do
+            subject.to_file
+          end
+
+          it "should write a jackson action file" do
+            subject.to_file
+            content = File.read('app/actions/jackson.rb')
+            expect(content).to(eq <<EOF
+require_relative '../entities/apple'
+require_relative '../entities/orange'
+
+class Jackson
+
+  def initialize 
+  end
+
+  def execute input
+    # some text describing what I should do
+    # use: apple.slice, orange.crush
+    
+  end
+end
+EOF
+)
+          end
+
+          it "should set no jacks" do
+            subject.to_file
+            expect(@application.jacks).to eq({})
+          end
+
+          it "should set the entities" do
+            subject.to_file
+            expect(@application.entities).to eq({"apple"=>['slice'], "orange"=>['crush']})
+          end
+        end
+
+        context "when the same entity has two requires" do
+
+          before do
+            create_directories_necessary_for_descriptors
+
+            @application = stub(jacks: {}, entities: {}, dir: 'app')
+            Obvious::Generators::Application.stubs(:instance).returns @application
+          end
+
+          let( :yaml_file ) {
+            requires = "apple.slice, apple.juice"
+            code = [ { 'c' => 'some text describing what I should do', 'requires' => requires } ]
+            { "Action" => "Jackson", "Description" => "This is something", "Code" => code }
+          }
+
+          it "should not error" do
+            subject.to_file
+          end
+
+          it "should write a jackson action file" do
+            subject.to_file
+            content = File.read('app/actions/jackson.rb')
+            expect(content).to(eq <<EOF
+require_relative '../entities/apple'
+
+class Jackson
+
+  def initialize 
+  end
+
+  def execute input
+    # some text describing what I should do
+    # use: apple.slice, apple.juice
+    
+  end
+end
+EOF
+)
+          end
+
+          it "should set the entities" do
+            subject.to_file
+            expect(@application.entities).to eq({"apple"=>['slice', 'juice']})
+          end
+        end
+        
+        
+        context "when requires have jacks" do
+
+          before do
+            create_directories_necessary_for_descriptors
+
+            @application = stub(jacks: {}, entities: {}, dir: 'app')
+            Obvious::Generators::Application.stubs(:instance).returns @application
+          end
+
+          let( :yaml_file ) {
+            requires = "StatusJack.a_method_on_a_jack_that_you_need, Status.another_method_you_will_need"
+            code = [ { 'c' => 'some text describing what I should do', 'requires' => requires } ]
+            { "Action" => "Jackson", "Description" => "This is something", "Code" => code }
+          }
+
+          it "should not error" do
+            subject.to_file
+          end
+
+          it "should write a jackson action file" do
+            subject.to_file
+            content = File.read('app/actions/jackson.rb')
+            expect(content).to(eq <<EOF
+require_relative '../entities/status'
+
+class Jackson
+
+  def initialize status_jack
+    @status_jack = status_jack
+  end
+
+  def execute input
+    # some text describing what I should do
+    # use: StatusJack.a_method_on_a_jack_that_you_need, Status.another_method_you_will_need
+    
+  end
+end
+EOF
+)
+          end
+
+          it "should set the jacks" do
+            subject.to_file
+            expect(@application.jacks["StatusJack"]).to eq(["a_method_on_a_jack_that_you_need"])
+          end
+
+          it "should set the entities" do
+            subject.to_file
+            expect(@application.entities['Status']).to eq(['another_method_you_will_need'])
           end
         end
       end
