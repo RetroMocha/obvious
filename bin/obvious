@@ -1,7 +1,5 @@
 #!/usr/bin/env ruby
 
-require 'obvious'
+require_relative '../lib/obvious/cli/application'
 
-if ARGV[0] == 'generate'
-  Obvious::Generators::ApplicationGenerator.generate
-end
+exit Obvious::CLI::Application.new(ARGV).execute!
