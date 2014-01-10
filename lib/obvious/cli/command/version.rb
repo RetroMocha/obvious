@@ -15,8 +15,6 @@ module Obvious
           end
         end
 
-        def initialize(parser)
-        end
         #Executes version command
         def execute(view)
           view.output("Obvious #{Obvious::VERSION}\n")

@@ -14,10 +14,6 @@ module Obvious
           end
         end
 
-        def initialize(parser)
-          @parser = parser
-        end
-
         #Executes the help command
         def execute(view)
           view.output(@parser.to_s)

@@ -15,10 +15,6 @@ module Obvious
           end
         end
 
-        def initialize(parser)
-          @parser = parser
-        end
-
         #Executes the worked based on a given command
         def execute(view)
           Obvious::Generators::NewApplicationGenerator.new(@parser.argv).generate()

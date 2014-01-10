@@ -2,18 +2,24 @@ module Obvious
   module CLI
     module Command
       class Base
-        def self.summary
-          return if commands.empty?
-          "#{commands.map{|w| %["#{w}"]}.join(" or ").ljust(36)} #{description}"
+        class << self
+          def summary
+            return if commands.empty?
+            "#{commands.map{|w| %["#{w}"]}.join(" or ").ljust(36)} #{description}"
+          end
+          def commands
+            []
+          end
+          def description
+            ""
+          end
+          def flag?
+            commands.first.to_s[0] == "-"
+          end
         end
-        def self.commands
-          []
-        end
-        def self.description
-          ""
-        end
-        def self.flag?
-          commands.first.to_s[0] == "-"
+
+        def initialize(parser)
+          @parser = parser
         end
       end
 
