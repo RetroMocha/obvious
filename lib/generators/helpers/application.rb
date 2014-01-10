@@ -5,6 +5,9 @@ require_relative 'application_directory'
 module Obvious
   module Generators
     class Application
+      class InvalidApplication < StandardError; end
+      class FileExists < StandardError; end
+
       include Singleton
       include ApplicationDirectory
       DEFAULT_NAME = "app"
@@ -56,6 +59,13 @@ module Obvious
         jacks.each do |k,v|
           v.uniq!
         end
+      end
+
+      def valid?
+        File.exists? descriptors_dir
+      end
+      def verify_valid_app!
+        raise InvalidApplication.new("#{dir.expand_path} is not a valid obvious application directory") unless valid?
       end
       #######
       private

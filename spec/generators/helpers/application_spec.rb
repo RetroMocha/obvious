@@ -56,4 +56,25 @@ describe Obvious::Generators::Application do
       expect(app.descriptors_dir).to eq full_path_for(app.dir.join("descriptors"))
     end
   end
+
+  context "valid?" do
+    it "is false" do
+      app.dir = "not-real"
+      expect(app.valid?).to be_false
+    end
+    it "is true" do
+      app.dir = tmp_application_dir
+      expect(app.valid?).to be_true
+    end
+  end
+  context "verify_valid_app!" do
+    it "raises an error when invalid" do
+      app.stub(:valid?).and_return(false)
+      expect { app.verify_valid_app! }.to raise_exception(Obvious::Generators::Application::InvalidApplication)
+    end
+    it "raises nothing if valid" do
+      app.stub(:valid?).and_return(true)
+      expect { app.verify_valid_app! }.to_not raise_exception(Obvious::Generators::Application::InvalidApplication)
+    end
+  end
 end
