@@ -1,20 +1,35 @@
 require 'singleton'
+require 'pathname'
+require_relative 'application_directory'
 
 module Obvious
   module Generators
     class Application
       include Singleton
+      include ApplicationDirectory
+      DEFAULT_NAME = "app"
 
-      attr_reader :jacks, :entities, :dir
+      attr_reader :app_name, :dir
 
       def initialize
-        @dir = 'app'
+        self.app_name = DEFAULT_NAME
+      end
 
+      def dir=(value)
+        value = Pathname.new(value)
+        @dir = value
         counter = 1
-        while File.directory? @dir
-          @dir = "app_#{counter}"
+        while File.exists? value
+          @dir.basename = value.basename + counter
           counter += 1
+          break if counter > 100 #to prevent infinite loop
         end
+
+      end
+
+      def app_name=(value)
+        @app_name = extract_app_name(value)
+        self.dir = value
       end
 
       def jacks
@@ -26,7 +41,7 @@ module Obvious
       end
 
       def target_path
-        File.realpath Dir.pwd
+        dir.dirname.realpath
       end
 
       def lib_path
@@ -41,6 +56,12 @@ module Obvious
         jacks.each do |k,v|
           v.uniq!
         end
+      end
+      #######
+      private
+      #######
+      def extract_app_name(dir)
+        File.basename(dir)
       end
     end # ::Application
   end

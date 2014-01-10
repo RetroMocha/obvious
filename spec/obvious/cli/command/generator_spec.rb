@@ -4,11 +4,12 @@ describe Obvious::CLI::Command::Generator do
   subject(:cmd) { Obvious::CLI::Command::Generator.new(parser) }
 
   before(:each) do
-    Obvious::Generators::ApplicationGenerator.stub(:generate)
+    Obvious::Generators::ApplicationGenerator.any_instance.stub(:generate)
+    parser.stub(:argv).and_return([])
   end
 
   it 'should call app generator' do
-    Obvious::Generators::ApplicationGenerator.should_receive(:generate)
+    Obvious::Generators::ApplicationGenerator.any_instance.should_receive(:generate)
     cmd.execute(view)
   end
 

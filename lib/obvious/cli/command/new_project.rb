@@ -1,17 +1,17 @@
-require_relative '../../../generators/application_generator'
+require_relative '../../../generators/new_application_generator'
 module Obvious
   module CLI
     module Command
       #
       # Generates Application
       #
-      class Generator < Base
+      class NewProject < Base
         class << self
           def commands
-            ['generate', 'g']
+            ['new', 'n']
           end
           def description
-            "Generates application files"
+            "Generates a new application and all the required files"
           end
         end
 
@@ -21,7 +21,7 @@ module Obvious
 
         #Executes the worked based on a given command
         def execute(view)
-          Obvious::Generators::ApplicationGenerator.new(@parser.argv).generate
+          Obvious::Generators::NewApplicationGenerator.new(@parser.argv).generate()
           view.report_success
         end
       end
