@@ -11,9 +11,11 @@ module Obvious
 
       def_delegators :@parser, :to_s, :program_name
 
+      attr_accessor :argv
+
       def initialize(argv)
         @parsed = false
-        @argv = argv
+        self.argv = argv
         @parser = OptionParser.new
         @flag_command = "-h"
         setup_options
