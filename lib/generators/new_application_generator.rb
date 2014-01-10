@@ -17,6 +17,10 @@ module Obvious
         puts "Done"
       end
 
+      #######
+      private
+      #######
+
       #TODO: Future plans to add a way to generate a descriptor yml file.
       def starting_instructions
         puts "Your next step is to generate a descriptor by running `obvious descriptor create_user`"
