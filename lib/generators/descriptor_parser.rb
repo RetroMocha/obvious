@@ -1,19 +1,18 @@
 require 'yaml'
 
+require_relative 'helpers/exceptions'
 require_relative 'helpers/application'
 
 module Obvious
   module Generators
-    class InvalidDescriptorError < StandardError; end
-
-    class Descriptor
+    class DescriptorParser
       def initialize descriptor
         @descriptor = descriptor
       end
 
       def to_file
         validate_descriptor
-        
+
         @jacks, @entities = {}, {}
         @code = ''
 

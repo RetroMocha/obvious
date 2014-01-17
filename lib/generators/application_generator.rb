@@ -2,7 +2,7 @@ require 'yaml'
 
 require_relative 'base_generator'
 require_relative 'helpers/application'
-require_relative 'descriptor'
+require_relative 'descriptor_parser'
 
 module Obvious
   module Generators
