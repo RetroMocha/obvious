@@ -15,6 +15,7 @@ module Obvious
         end
       end
       def create_directory dir="", inside_app = true
+        dir = Pathname.new(dir)
         dir = Pathname.new(app.dir).join(dir) if inside_app
         FileUtils.mkdir_p dir
       end
