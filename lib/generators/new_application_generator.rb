@@ -6,7 +6,7 @@ module Obvious
         super(argv)
         app.app_name =  argv[1]
       end
-      def generate ()
+      def generate()
         puts 'Generating folders...'
         create_directory(app.dir, false)
 

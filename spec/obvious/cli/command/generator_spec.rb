@@ -1,3 +1,4 @@
+require_relative '../../../../lib/obvious/cli/command'
 describe Obvious::CLI::Command::Generator do
   let(:view) { mock('view').as_null_object }
   let(:parser) {mock('view').as_null_object }

@@ -30,13 +30,22 @@ module Obvious
           def display_variables
             required_variables.empty? ? "" : required_variables.map{|v| v.gsub(" ", "_").upcase}.join(" ") + (options? ? " [options]" : "")
           end
-        end
+          def generator
+            nil
+          end
+        end #class << self
 
         def initialize(parser)
           @parser = parser
         end
         def validate!
-          raise MissingVariable.new("Not all required variables are met: #{self.class.display_variables}") if @parser.argv.count <= self.class.required_variables.count
+          raise MissingVariable.new("Not all required variables are met: #{self.class.display_variables}") if !self.class.required_variables.empty? && @parser.argv.count <= self.class.required_variables.count
+        end
+        def execute(view)
+          raise MissingGenerator.new("#{self.class}.generator was not defined") if self.class.generator.nil?
+          validate!
+          self.class.generator.new(@parser.argv).generate()
+          view.report_success
         end
       end
 

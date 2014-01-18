@@ -19,8 +19,8 @@ describe Obvious::CLI::Command::Descriptor do
   end
 
   it "validates required variables" do
-    parser.stub(:argv).and_return("descriptor")
-    expect { cmd.execute(view) }.to raise_exception
+    parser.stub(:argv).and_return(["descriptor"])
+    expect { cmd.execute(view) }.to raise_exception(Obvious::CLI::MissingVariable)
   end
 
   it 'tells the view it succeeded' do

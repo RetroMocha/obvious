@@ -16,13 +16,9 @@ module Obvious
           def description
             "Generates a new application and all the required files"
           end
-        end
-
-        #Executes the worked based on a given command
-        def execute(view)
-          validate!
-          Obvious::Generators::NewApplicationGenerator.new(@parser.argv).generate()
-          view.report_success
+          def generator
+            Obvious::Generators::NewApplicationGenerator
+          end
         end
       end
     end

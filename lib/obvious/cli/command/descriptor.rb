@@ -16,13 +16,14 @@ module Obvious
           def description
             "Generates a blank descriptor file"
           end
+          def generator
+            Obvious::Generators::DescriptorGenerator
+          end
         end
 
         #Executes the help command
         def execute(view)
-          validate!
-          Obvious::Generators::DescriptorGenerator.new(@parser.argv).generate
-          view.report_success
+          super(view)
         rescue Obvious::Generators::Application::InvalidApplication => e
           view.output("Unable to run #{@parser.command_name}: #{e.message}")
           view.report_error
