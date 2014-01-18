@@ -58,6 +58,12 @@ describe Obvious::Generators::Application do
   end
 
   context "valid?" do
+    before(:each) do
+      create_descriptor_folder
+    end
+    after(:each) do
+      cleanup_tmp_folder
+    end
     it "is false" do
       app.dir = "not-real"
       expect(app.valid?).to be_false

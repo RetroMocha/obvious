@@ -1,7 +1,6 @@
 require_relative '../spec_helper'
 require_relative '../../lib/generators/descriptor_generator'
 
-
 describe Obvious::Generators::DescriptorGenerator do
   def delete_file_for(descriptor_name)
     file_path = subject.app.descriptors_dir.join("#{descriptor_name}.yml")
@@ -11,10 +10,11 @@ describe Obvious::Generators::DescriptorGenerator do
   subject(:generator) { Obvious::Generators::DescriptorGenerator.new(["descriptor", descriptor_name]) }
 
   before(:each) do
+    create_descriptor_folder
     generator.stub(:puts)
   end
   after(:each) do
-    delete_file_for(descriptor_name)
+    cleanup_tmp_folder
   end
 
   it "requires name of descriptor" do
