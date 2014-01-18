@@ -10,6 +10,9 @@ module Obvious
           def commands
             ["descriptor", "d"]
           end
+          def required_variables
+            ["Name"]
+          end
           def description
             "Generates a blank descriptor file"
           end
@@ -17,6 +20,7 @@ module Obvious
 
         #Executes the help command
         def execute(view)
+          validate!
           Obvious::Generators::DescriptorGenerator.new(@parser.argv).generate
           view.report_success
         rescue Obvious::Generators::Application::InvalidApplication => e

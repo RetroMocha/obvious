@@ -1,4 +1,5 @@
 require_relative 'arg_parser'
+require_relative 'exceptions'
 
 module Obvious
   # The Command Line Interface module

@@ -1,3 +1,5 @@
+require_relative 'exceptions'
+
 module Obvious
   module CLI
     module Command
@@ -5,7 +7,7 @@ module Obvious
         class << self
           def summary
             return if commands.empty?
-            "#{commands.map{|w| %["#{w}"]}.join(" or ").ljust(36)} #{description}"
+            "#{"#{display_commands} #{display_variables}".ljust(36)} #{description}"
           end
           def commands
             []
@@ -13,13 +15,28 @@ module Obvious
           def description
             ""
           end
+          def required_variables
+            []
+          end
+          def options?
+            false
+          end
           def flag?
             commands.first.to_s[0] == "-"
+          end
+          def display_commands
+            commands.map{|w| %["#{w}"]}.join(" or ")
+          end
+          def display_variables
+            required_variables.empty? ? "" : required_variables.map{|v| v.gsub(" ", "_").upcase}.join(" ") + (options? ? " [options]" : "")
           end
         end
 
         def initialize(parser)
           @parser = parser
+        end
+        def validate!
+          raise MissingVariable.new("Not all required variables are met: #{self.class.display_variables}") if @parser.argv.count <= self.class.required_variables.count
         end
       end
 
