@@ -1,6 +1,6 @@
 require 'singleton'
 require 'pathname'
-require_relative 'application_directory'
+require_relative './application_structure'
 
 module Obvious
   module Generators
@@ -9,7 +9,7 @@ module Obvious
       class FileExists < StandardError; end
 
       include Singleton
-      include ApplicationDirectory
+      include ApplicationStructure
       DEFAULT_NAME = "app"
 
       attr_reader :app_name, :dir
