@@ -6,7 +6,7 @@ require_relative 'descriptor_parser'
 
 module Obvious
   module Generators
-    class ApplicationGenerator < BaseGenerator
+    class DescriptorProcessGenerator < BaseGenerator
       def generate
         puts 'Generating the files...'
 
@@ -22,10 +22,10 @@ module Obvious
         @app.remove_duplicates
 
         puts 'Writing Entities scaffolds... '
-        Obvious::Generators::ApplicationGenerator.write_entities
+        write_entities
 
         puts 'Writing jacks scaffolds... '
-        Obvious::Generators::ApplicationGenerator.write_jacks
+        write_jacks
 
         puts "Files are located in the `#{@app.dir}` directory."
       end # ::generate

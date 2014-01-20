@@ -1,20 +1,20 @@
-require_relative '../../../generators/application_generator'
+require_relative '../../../generators/descriptor_process_generator'
 module Obvious
   module CLI
     module Command
       #
       # Generates Application
       #
-      class Generator < Base
+      class Process < Base
         class << self
           def commands
-            ['generate', 'g']
+            ['process', 'p']
           end
           def description
-            "Generates application files"
+            "Processes descriptor yml files into code"
           end
           def generator
-            Obvious::Generators::ApplicationGenerator
+            Obvious::Generators::DescriptorProcessGenerator
           end
         end
       end

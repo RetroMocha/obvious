@@ -18,8 +18,8 @@ describe Obvious::CLI::ArgParser do
 
   context "action" do
     it "should get action command" do
-      @parser = Obvious::CLI::ArgParser.new(['generate'])
-      expect(@parser.get_command).to be Obvious::CLI::Command::Generator
+      @parser = Obvious::CLI::ArgParser.new(['process'])
+      expect(@parser.get_command).to be Obvious::CLI::Command::Process
     end
   end
 end
