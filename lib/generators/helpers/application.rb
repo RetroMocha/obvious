@@ -19,6 +19,7 @@ module Obvious
       end
 
       def dir=(value)
+        value = "." if value == DEFAULT_NAME
         @dir = Pathname.new(value)
       end
 

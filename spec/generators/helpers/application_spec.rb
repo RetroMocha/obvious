@@ -23,8 +23,8 @@ describe Obvious::Generators::Application do
   end
 
   context "dir" do
-    it "sets up dir by default" do
-      expect(app.dir).to eq full_path_for(Obvious::Generators::Application::DEFAULT_NAME)
+    it "sets up dir by default to be current directory" do
+      expect(app.dir).to eq full_path_for('.')
     end
     it "allows a new dir" do
       new_dir = "./new_dir"
@@ -46,7 +46,7 @@ describe Obvious::Generators::Application do
 
   context "target_path" do
     it "points to the root directory" do
-      dir = app.dir
+      dir = app.app_dir
       expect(app.target_path).to eq dir.parent.realpath
     end
   end
