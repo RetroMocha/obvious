@@ -1,7 +1,8 @@
+require "pathname"
 module Obvious
   module Generators
     module ApplicationStructure
-      FILE_SOURCE_DIR = File.expand_path("../../../obvious/files", __FILE__)
+      FILE_SOURCE_DIR = Pathname.new(File.expand_path("../../../obvious/files", __FILE__))
       APPLICATION_DIR = "app"
       SPEC_DIR = "spec"
       DIRS = {
@@ -17,14 +18,13 @@ module Obvious
         support_doubles: "#{SPEC_DIR}/support/doubles"
       }
       FILES = {
-        rakefile:{
-          source: "#{FILE_SOURCE_DIR}/Rakefile",
-          destination: "Rakefile"
-        },
-        gemfile:{
-          source: "#{FILE_SOURCE_DIR}/Gemfile",
-          destination: "Gemfile"
-        }
+        rakefile: "Rakefile",
+        gemfile: "Gemfile",
+        fs_plug: "external/fs_plug.rb",
+        mongo_plug: "external/mongo_plug.rb",
+        mysql_plug: "external/mysql_plug.rb",
+        s3_plug: "external/s3_plug.rb",
+        api_plug: "external/api_plug.rb"
       }
       module ClassMethods
 
@@ -47,32 +47,32 @@ module Obvious
         end
 
         def copy_files
-          process_file(:rakefile)
-          process_file(:gemfile)
+          FILES.each do |filename, path|
+            process_file(filename)
+          end
         end
 
         #######
         private
         #######
         def process_file(file_name)
-          file_hash = FILES[file_name]
-          raise FileNotFound.new("Can't find record for #{file_name}") if file_hash.nil?
-          source = file_hash[:source]
+          file_path = Pathname.new(FILES[file_name])
+          raise FileNotFound.new("Can't find record for #{file_name}") if file_path.nil?
+          source = FILE_SOURCE_DIR.join(file_path)
           verify_source source, file_name
-          destination = file_hash[:destination]
+          destination = dir.join(file_path)
           verify_destination destination, file_name
-          copy_file file_hash[:source], dir.join(file_hash[:destination])
+          copy_file source, destination
         end
         def copy_file(source, destination)
           FileUtils.copy_file(source, destination)
         end
-        def verify_source path, file=""
-          raise SourceFileNotFound.new("Missing source file for #{file}: #{Pathname.new(path).expand_path}") if path.nil? || !File.exists?(path)
+        def verify_source path, file=path
+          raise SourceFileNotFound.new("Missing source file for #{file}: #{path.expand_path}") unless path.exist?
         end
-        def verify_destination path, file=""
+        def verify_destination path, file=path
           raise DestinationNotSpecified.new("Destination not specified for #{file}") if path.nil?
-          path = Pathname.new(path)
-          FileUtils.mkdir_p(path.dirname) unless File.exists? path.dirname
+          FileUtils.mkdir_p(path.expand_path.dirname) unless File.exist? path.dirname
         end
       end
 

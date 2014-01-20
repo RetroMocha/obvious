@@ -32,11 +32,10 @@ describe Obvious::Generators::NewApplicationGenerator do
     before(:each) do
       generator.generate
     end
-    it "copies rakefile" do
-      expect(app_folder.join("Rakefile")).to exist
-    end
-    it "copies gemfile" do
-      expect(app_folder.join("Gemfile")).to exist
+    Obvious::Generators::Application::FILES.each do |filename, filepath|
+      it "copies #{filename}" do
+        expect(app_folder.join(filepath)).to exist
+      end
     end
   end
 end
