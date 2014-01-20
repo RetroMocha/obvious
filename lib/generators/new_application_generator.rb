@@ -8,10 +8,9 @@ module Obvious
       end
       def generate()
         puts 'Generating folders...'
-        create_directory(app.dir, false)
+        app.create_directories
 
-        create_directory(app.descriptors_dir, false)
-
+        app.copy_files
         # puts starting_instructions
 
         puts "Done"
@@ -20,6 +19,10 @@ module Obvious
       #######
       private
       #######
+
+      def copy_files
+        # copy_rake_file
+      end
 
       #TODO: Future plans to add a way to generate a descriptor yml file.
       def starting_instructions

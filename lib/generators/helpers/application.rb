@@ -19,15 +19,7 @@ module Obvious
       end
 
       def dir=(value)
-        value = Pathname.new(value)
-        @dir = value
-        counter = 1
-        while File.exists? value
-          @dir.basename = value.basename + counter
-          counter += 1
-          break if counter > 100 #to prevent infinite loop
-        end
-
+        @dir = Pathname.new(value)
       end
 
       def app_name=(value)
