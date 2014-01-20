@@ -19,7 +19,11 @@ module Obvious
       FILES = {
         rakefile:{
           source: "#{FILE_SOURCE_DIR}/Rakefile",
-          destination: "./Rakefile"
+          destination: "Rakefile"
+        },
+        gemfile:{
+          source: "#{FILE_SOURCE_DIR}/Gemfile",
+          destination: "Gemfile"
         }
       }
       module ClassMethods
@@ -44,6 +48,7 @@ module Obvious
 
         def copy_files
           process_file(:rakefile)
+          process_file(:gemfile)
         end
 
         #######
