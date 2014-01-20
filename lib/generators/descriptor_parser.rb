@@ -72,7 +72,7 @@ end
 
         snake_name = @descriptor['Action'].gsub(/(.)([A-Z])/,'\1_\2').downcase
 
-        filename = "#{Obvious::Generators::Application.instance.dir}/actions/#{snake_name}.rb"
+        filename = "#{Obvious::Generators::Application.instance.app_dir}/actions/#{snake_name}.rb"
         File.open(filename, 'w') {|f| f.write(output) }
 
         output = %Q{require_relative '../../actions/#{snake_name}'
@@ -86,7 +86,7 @@ describe #{@descriptor['Action']} do
 end
         }
 
-        filename = "#{Obvious::Generators::Application.instance.dir}/spec/actions/#{snake_name}_spec.rb"
+        filename = "spec/#{Obvious::Generators::Application.instance.app_dir}/actions/#{snake_name}_spec.rb"
         File.open(filename, 'w') {|f| f.write(output) }
       end
 
@@ -120,10 +120,10 @@ end
       end
 
       def validate_descriptor
-        raise InvalidDescriptorError unless @descriptor
-        raise InvalidDescriptorError if @descriptor['Code'].nil?
-        raise InvalidDescriptorError if @descriptor['Action'].nil?
-        raise InvalidDescriptorError if @descriptor['Description'].nil?
+        raise InvalidDescriptorError.new("Missing Descriptor") if @descriptor.nil?
+        raise InvalidDescriptorError.new("Missing Code section") if @descriptor['Code'].nil?
+        raise InvalidDescriptorError.new("Missing Action section") if @descriptor['Action'].nil?
+        raise InvalidDescriptorError.new("Missing Description section") if @descriptor['Description'].nil?
       end
     end # ::Descriptor
   end

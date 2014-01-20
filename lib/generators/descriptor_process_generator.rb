@@ -15,7 +15,7 @@ module Obvious
         puts 'Creating actions from descriptors... ' unless descriptors.length.zero?
         descriptors.each do |file|
           yaml = YAML.load_file(file)
-          descriptor = Obvious::Generators::Descriptor.new yaml
+          descriptor = Obvious::Generators::DescriptorParser.new yaml
           descriptor.to_file
         end
 
@@ -27,7 +27,7 @@ module Obvious
         puts 'Writing jacks scaffolds... '
         write_jacks
 
-        puts "Files are located in the `#{@app.dir}` directory."
+        puts "Files are located in the `#{@app.app_dir.expand_path}` directory."
       end # ::generate
 
       def write_entities
@@ -65,7 +65,7 @@ end
 }
           snake_name = name.gsub(/(.)([A-Z])/,'\1_\2').downcase
 
-          filename = "#{@app.dir}/entities/#{snake_name}.rb"
+          filename = "#{@app.app_dir}/entities/#{snake_name}.rb"
           File.open(filename, 'w') { |f| f.write(output) }
 
           output = %Q{require_relative '../../entities/#{snake_name}'
@@ -75,7 +75,7 @@ describe #{name} do
 end
 }
 
-          filename = "#{@app.dir}/spec/entities/#{snake_name}_spec.rb"
+          filename = "/spec/#{@app.app_dir}/entities/#{snake_name}_spec.rb"
           File.open(filename, 'w') {|f| f.write(output) }
         end
       end #write_entities
@@ -131,7 +131,7 @@ end
 
           snake_name = k.gsub(/(.)([A-Z])/,'\1_\2').downcase
 
-          filename = "#{@app.dir}/contracts/#{snake_name}_contract.rb"
+          filename = "#{@app.app_dir}/contracts/#{snake_name}_contract.rb"
           File.open(filename, 'w') {|f| f.write(output) }
 
           output = %Q{require_relative '../../contracts/#{snake_name}_contract'
@@ -141,7 +141,7 @@ describe #{k}Contract do
 end
 }
 
-          filename = "#{@app.dir}/spec/contracts/#{snake_name}_spec.rb"
+          filename = "/spec/#{@app.app_dir}/contracts/#{snake_name}_spec.rb"
           File.open(filename, 'w') {|f| f.write(output) }
 
           output = %Q{require_relative '../../contracts/#{snake_name}_contract'
@@ -166,7 +166,7 @@ class #{k}_BadOutput < #{k}Contract
 end
 }
 
-          filename = "#{@app.dir}/spec/doubles/#{snake_name}_double.rb"
+          filename = "spec/#{@app.app_dir}/doubles/#{snake_name}_double.rb"
           File.open(filename, 'w') {|f| f.write(output) }
 
         end
