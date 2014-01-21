@@ -12,7 +12,7 @@ module Obvious
         check_destination!
       end
       def descriptor_name
-        camel_case(@name)
+        @name.camel_case
       end
       def generate
         result = render(template, action: descriptor_name)
