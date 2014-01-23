@@ -34,7 +34,7 @@ describe Obvious::Generators::EntityGenerator do
       end
       context "spec" do
         let(:file) { File.read full_path_for(subject.target_spec_path(entity)) }
-        context 'action file' do
+        context 'file' do
           it "exists" do
             expect(full_path_for(subject.target_spec_path(entity))).to exist
           end
