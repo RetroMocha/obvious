@@ -32,19 +32,17 @@ describe Obvious::Generators::EntityGenerator do
           expect(file).to include "class #{entity.to_s.camel_case}"
         end
       end
-      context "spec" do
+      context "spec file" do
         let(:file) { File.read full_path_for(subject.target_spec_path(entity)) }
-        context 'file' do
-          it "exists" do
-            expect(full_path_for(subject.target_spec_path(entity))).to exist
-          end
-          it "has describe block with name" do
-            expect(file).to include "describe #{entity.to_s.camel_case}"
-          end
-          it "requires the entity file" do
-            expect(file).to include "entities/#{entity}"
-            expect(file).to_not include "entities/#{entity}.rb"
-          end
+        it "exists" do
+          expect(full_path_for(subject.target_spec_path(entity))).to exist
+        end
+        it "has describe block with name" do
+          expect(file).to include "describe #{entity.to_s.camel_case}"
+        end
+        it "requires the entity file" do
+          expect(file).to include "entities/#{entity}"
+          expect(file).to_not include "entities/#{entity}.rb"
         end
       end
     end
