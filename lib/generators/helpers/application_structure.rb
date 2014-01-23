@@ -9,11 +9,11 @@ module Obvious
         descriptors: 'descriptors',
         app: APPLICATION_DIR,
         actions: "#{APPLICATION_DIR}/actions",
-        contracts: "#{APPLICATION_DIR}/contracts",
+        jacks: "#{APPLICATION_DIR}/contracts",
         entities: "#{APPLICATION_DIR}/entities",
         spec: SPEC_DIR,
         actions_spec:"#{SPEC_DIR}/#{APPLICATION_DIR}/actions",
-        contracts_spec:"#{SPEC_DIR}/#{APPLICATION_DIR}/contracts",
+        jacks_spec:"#{SPEC_DIR}/#{APPLICATION_DIR}/contracts",
         entities_spec:"#{SPEC_DIR}/#{APPLICATION_DIR}/entities",
         support_doubles: "#{SPEC_DIR}/support/doubles"
       }
