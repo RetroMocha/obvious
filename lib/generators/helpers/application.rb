@@ -33,14 +33,14 @@ module Obvious
         @jacks ||= {}
       end
       def add_jack name, method=""
-        (jacks[name.underscore] ||= []) << method
+        (jacks[name.underscore] ||= []) << method.to_s
       end
 
       def entities
         @entities ||= {}
       end
       def add_entity name, method=""
-        (entities[name.to_s.underscore] ||= []) << method
+        (entities[name.to_s.underscore] ||= []) << method.to_s
       end
 
       def target_path
