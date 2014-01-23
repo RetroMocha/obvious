@@ -1,6 +1,6 @@
 module Obvious
   module Generators
-    class DescriptorFileExist < StandardError; end
+    class FileExists < StandardError; end
     class MissingVariable < StandardError; end
     class InvalidDescriptorError < StandardError; end
     class FileNotFound < StandardError; end

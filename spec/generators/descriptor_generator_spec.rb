@@ -25,7 +25,7 @@ describe Obvious::Generators::DescriptorGenerator do
   end
   it "raises an DecoratorFileExist if file already exists" do
     generator.generate
-    expect{generator.generate}.to raise_exception(Obvious::Generators::DescriptorFileExist)
+    expect{generator.generate}.to raise_exception(Obvious::Generators::FileExists)
   end
   context "file contents" do
     before(:each) do
