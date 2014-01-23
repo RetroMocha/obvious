@@ -17,14 +17,14 @@ class ErbRender < OpenStruct
   end
 
   def render_with_binding(template, binding=binding)
-    ERB.new(template).result(binding)
+    ERB.new(template, 0, "-").result(binding)
   end
   alias :render :render_with_binding
 
   def render_to_file(template, path, binding=binding)
     path = Pathname.new(path)
     FileUtils.mkdir_p(path.dirname) unless path.dirname.exist?
-    result = ERB.new(template).result(binding)
+    result = render_with_binding(template, binding)
     File.open(path.expand_path, "wb") {|f|
       f.write(result)
     }
