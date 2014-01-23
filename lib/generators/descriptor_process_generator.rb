@@ -2,24 +2,22 @@ require 'yaml'
 
 require_relative 'base_generator'
 require_relative 'helpers/application'
-require_relative 'descriptor_parser'
+require_relative 'action_generator'
 
 module Obvious
   module Generators
     class DescriptorProcessGenerator < BaseGenerator
       def generate
-        puts 'Generating the files...'
-
         descriptors = Dir['descriptors/*.yml']
-
         puts 'Creating actions from descriptors... ' unless descriptors.length.zero?
         descriptors.each do |file|
           yaml = YAML.load_file(file)
-          descriptor = Obvious::Generators::DescriptorParser.new yaml
-          descriptor.to_file
+          ActionGenerator.new(@descriptor['Action'], @descriptor['Description'], @descriptor['Code']).generate
         end
 
         @app.remove_duplicates
+
+
 
         puts 'Writing Entities scaffolds... '
         write_entities

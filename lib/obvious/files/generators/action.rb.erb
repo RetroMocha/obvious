@@ -1,0 +1,13 @@
+require 'obvious'
+<%= requirements.join("/n") %>
+
+class <%= action %>
+
+  def initialize <%= initializer_jacks %>
+    <%= assigning_jacks.join("\n") %>
+  end
+
+  def execute input
+    <%= @code %>
+  end
+end

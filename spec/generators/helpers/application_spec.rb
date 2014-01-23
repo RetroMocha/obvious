@@ -51,6 +51,19 @@ describe Obvious::Generators::Application do
     end
   end
 
+  {jack: "jacks", entity: "entities"}.each do |target, values|
+    context "add_#{target}" do
+      it "works" do
+        expect{ app.send("add_#{target}", "MyThing", "bob")}.to change{app.send(values).count}.by(1)
+      end
+      it "underscores the name of the #{values}" do
+        app.send("add_#{target}", "MyNewWorld", "bob")
+        expect(app.send(values)["MyNewWorld"]).to be_nil
+        expect(app.send(values)["my_new_world"]).to include "bob"
+      end
+    end
+  end
+
   context 'descriptors_dir' do
     it "points to the correct directory" do
       expect(app.descriptors_dir).to eq full_path_for(app.dir.join("descriptors"))

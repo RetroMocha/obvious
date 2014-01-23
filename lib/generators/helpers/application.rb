@@ -1,6 +1,7 @@
 require 'singleton'
 require 'pathname'
 require_relative './application_structure'
+require_relative './string_ext'
 
 module Obvious
   module Generators
@@ -31,9 +32,15 @@ module Obvious
       def jacks
         @jacks ||= {}
       end
+      def add_jack name, method=""
+        (jacks[name.underscore] ||= []) << method
+      end
 
       def entities
         @entities ||= {}
+      end
+      def add_entity name, method=""
+        (entities[name.to_s.underscore] ||= []) << method
       end
 
       def target_path
