@@ -5,7 +5,7 @@ describe Obvious::Generators::ActionGenerator do
   let(:action) { "CreateStatus" }
   let(:description) { "Create Status for user" }
   let(:code) {[{'c' => "save status to jack", 'requires' => "StatusJack.save, Status.to_hash"}]}
-  subject(:action_generator) { Obvious::Generators::ActionGenerator.new(action, description, code) }
+  subject(:generator) { Obvious::Generators::ActionGenerator.new(action, description, code) }
   before(:each) do
     create_descriptor_folder
   end
@@ -32,7 +32,7 @@ describe Obvious::Generators::ActionGenerator do
         expect(file).to include "def initialize #{subject.jacks.keys.join(" ")}"
       end
       it "assigns jacks" do
-        action_generator.jacks.keys.each do |jack|
+        generator.jacks.keys.each do |jack|
           expect(file).to include "@#{jack} = #{jack}"
         end
       end
