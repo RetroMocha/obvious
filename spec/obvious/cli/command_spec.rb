@@ -40,17 +40,17 @@ describe Obvious::CLI::Command do
 
   describe Obvious::CLI::Command::Base do
     subject(:cmd) { Obvious::CLI::Command::Base }
-    let(:parser) { stub(:argv => ["test", "data"]) }
-    let(:view) { mock('view').as_null_object }
+    let(:parser) { double(argv: ["test", "data"]) }
+    let(:view) { double(report_success: true) }
 
     it "should have no commands by default" do
       expect(cmd.commands).to be_empty
     end
     it "should not be a flag command" do
-      expect(cmd.flag?).to be_false
+      expect(cmd.flag?).to be(false)
     end
     it "doesn't have options by default" do
-      expect(subject.options?).to be_false
+      expect(subject.options?).to be(false)
     end
     it "does't have variables by default" do
       expect(subject.required_variables).to be_empty
@@ -60,16 +60,16 @@ describe Obvious::CLI::Command do
     end
 
     context "when inherited" do
-      let(:generator) {mock(BogusGenerator).as_null_object}
+      let(:generator) { double() }
       subject(:cmd) { BaseTest.new(parser) }
       it "should be flagged" do
-        expect(BaseTest.flag?).to be_true
+        expect(BaseTest.flag?).to be(true)
       end
 
       context "has default generate behaviour that" do
         it "works" do
-          BogusGenerator.should_receive(:new).with(parser.argv).and_return(generator)
-          generator.should_receive(:generate)
+          expect(BogusGenerator).to receive(:new).with(parser.argv).and_return(generator)
+          expect(generator).to receive(:generate)
           cmd.execute(view)
         end
 
@@ -77,12 +77,12 @@ describe Obvious::CLI::Command do
 
       context "missing variables" do
         it "raise exception" do
-          parser.stub(:argv).and_return(["test"])
+          allow(parser).to receive(:argv).and_return(["test"])
           expect{cmd.validate!}.to raise_exception(Obvious::CLI::MissingVariable)
         end
         it "not raise exception" do
-          parser.stub(:argv).and_return(["test", "name"])
-          expect{cmd.validate!}.to_not raise_exception(Obvious::CLI::MissingVariable)
+          allow(parser).to receive(:argv).and_return(["test", "name"])
+          expect{cmd.validate!}.to_not raise_exception
         end
       end
 

@@ -36,8 +36,8 @@ describe Thing do
   it 'should create a valid object with valid input' do
     input = { name: 'Thing', id: 1 }
     t = Thing.new input
-    t.name.should eq 'Thing'
-    t.id.should eq 1
+    expect(t.name).to eq('Thing')
+    expect(t.id).to eq(1)
   end
 
   it 'should raise an error with invalid input types' do
@@ -59,7 +59,7 @@ describe Thing do
     it 'should return a hash representation of the object' do
       input = { name: 'Thing', id: 1 }
       t = Thing.new input
-      t.to_hash.should eq input
+      expect(t.to_hash).to eq(input)
     end
   end
 
@@ -67,7 +67,7 @@ describe Thing do
     it 'should raise a validation error on a failed validation' do
       expect { Thing2.new foo: 'not valid I promise!' }.to raise_error Obvious::ValidationError
     end
-    
+
     it 'should raise an error when trying to modify an object in a validation' do
       expect { Thing3.new foo: 'hello world' }.to raise_error RuntimeError
     end

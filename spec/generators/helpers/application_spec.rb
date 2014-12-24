@@ -79,21 +79,21 @@ describe Obvious::Generators::Application do
     end
     it "is false" do
       app.dir = "not-real"
-      expect(app.valid?).to be_false
+      expect(app.valid?).to be(false)
     end
     it "is true" do
       app.dir = tmp_application_dir
-      expect(app.valid?).to be_true
+      expect(app.valid?).to be(true)
     end
   end
   context "verify_valid_app!" do
     it "raises an error when invalid" do
-      app.stub(:valid?).and_return(false)
+      allow(app).to receive(:valid?).and_return(false)
       expect { app.verify_valid_app! }.to raise_exception(Obvious::Generators::Application::InvalidApplication)
     end
     it "raises nothing if valid" do
-      app.stub(:valid?).and_return(true)
-      expect { app.verify_valid_app! }.to_not raise_exception(Obvious::Generators::Application::InvalidApplication)
+      allow(app).to receive(:valid?).and_return(true)
+      expect { app.verify_valid_app! }.to_not raise_exception
     end
   end
 end

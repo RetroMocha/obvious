@@ -11,7 +11,7 @@ describe Obvious::Generators::DescriptorGenerator do
 
   before(:each) do
     create_descriptor_folder
-    generator.stub(:puts)
+    allow(generator).to receive(:puts)
   end
   after(:each) do
     cleanup_tmp_folder
