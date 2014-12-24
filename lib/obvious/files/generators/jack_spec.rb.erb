@@ -13,7 +13,7 @@ describe <%= jack %>JackContract do
         <%- when "list" -%>
         expect(result).to match_array [{id: 1}, {id: 2}]
         <%- when "remove" -%>
-        expect(result).to be_true
+        expect(result).to be(true)
         <%- else -%>
         #FIXME: Just a tempalte
         expect(result).to eq id: 1

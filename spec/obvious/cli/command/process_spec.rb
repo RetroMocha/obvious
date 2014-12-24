@@ -1,13 +1,13 @@
 require_relative '../../../../lib/obvious/cli/command'
 describe Obvious::CLI::Command::Process do
-  let(:view) { mock('view').as_null_object }
-  let(:parser) {mock('view').as_null_object }
-  let(:generator) {stub(generate: true)}
+  let(:view) { double(report_success: true) }
+  let(:parser) { double() }
+  let(:generator) { double(generate: true)}
   subject(:cmd) { Obvious::CLI::Command::Process.new(parser) }
 
   before(:each) do
-    Obvious::CLI::Command::Process.generator.stub(:new).and_return(generator)
-    parser.stub(:argv).and_return([])
+    allow(Obvious::CLI::Command::Process.generator).to receive(:new).and_return(generator)
+    allow(parser).to receive(:argv).and_return([])
   end
 
   it "calls the descriptor process generator" do
@@ -15,12 +15,12 @@ describe Obvious::CLI::Command::Process do
   end
 
   it 'should call app generator' do
-    generator.should_receive(:generate)
+    expect(generator).to receive(:generate)
     cmd.execute(view)
   end
 
   it 'tells the view it succeeded' do
-    view.should_receive(:report_success)
+    expect(view).to receive(:report_success)
     cmd.execute(view)
   end
 end

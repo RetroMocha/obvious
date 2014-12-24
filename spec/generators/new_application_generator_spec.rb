@@ -5,7 +5,7 @@ describe Obvious::Generators::NewApplicationGenerator do
   let(:app_folder) { tmp_application_dir.join(app_name) }
   subject(:generator) { Obvious::Generators::NewApplicationGenerator.new(["new", app_name]) }
   before(:each) do
-    Obvious::Generators::NewApplicationGenerator.any_instance.stub(:puts)
+    allow_any_instance_of(Obvious::Generators::NewApplicationGenerator).to receive(:puts)
   end
   after(:each) do
     cleanup_tmp_folder()
@@ -18,7 +18,7 @@ describe Obvious::Generators::NewApplicationGenerator do
       generator.generate
     end
     it "has the application folder" do
-      expect(File.exists?(app_folder)).to be_true
+      expect(File.exists?(app_folder)).to be(true)
     end
     context 'inside application folder' do
       Obvious::Generators::Application::DIRS.each do |folder_name, location|

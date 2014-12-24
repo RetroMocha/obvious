@@ -3,11 +3,11 @@ require_relative '../../lib/generators/jack_generator'
 
 jack_methods = [:new, :list]
 jacks = ["user", "status_with_case"]
-generator =  Obvious::Generators::JackGenerator.new
 
 describe Obvious::Generators::JackGenerator do
   before(:all) do
     create_descriptor_folder
+    generator =  Obvious::Generators::JackGenerator.new
     jacks.each do |jack|
       generator.app.add_jack jack, "new"
       generator.app.add_jack jack, :list

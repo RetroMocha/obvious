@@ -66,10 +66,10 @@ describe Obvious::Generators::ActionGenerator do
   context "parsing entities and jacks" do
     let(:code) {[{'c' => "save status to jack", 'requires' => "StatusJack.save, Status.to_hash"}]}
     it "extracts jacks" do
-      expect(subject.jacks).to have(1).jack
+      expect(subject.jacks.count).to be(1)
     end
     it "extracts entities" do
-      expect(subject.entities).to have(1).entity
+      expect(subject.entities.count).to be(1)
     end
   end
 

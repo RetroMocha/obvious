@@ -1,12 +1,12 @@
 require_relative '../../../../lib/obvious/cli/command'
 describe Obvious::CLI::Command::Descriptor do
-  let(:view) { mock('view').as_null_object }
-  let(:parser) {stub(argv: ["descriptor", "new_name"]) }
-  let(:generator) { mock('generator').as_null_object }
+  let(:view) { double(report_success: true) }
+  let(:parser) { double(argv: ["descriptor", "new_name"]) }
+  let(:generator) { double(generate: true) }
   subject(:cmd) { Obvious::CLI::Command::Descriptor.new(parser) }
 
   before(:each) do
-    Obvious::Generators::DescriptorGenerator.stub(:new).and_return(generator)
+    allow(Obvious::Generators::DescriptorGenerator).to receive(:new).and_return(generator)
   end
 
   it "doesn't raise any exceptions" do
@@ -14,17 +14,17 @@ describe Obvious::CLI::Command::Descriptor do
   end
 
   it 'should call app generator' do
-    generator.should_receive(:generate)
+    expect(generator).to receive(:generate)
     cmd.execute(view)
   end
 
   it "validates required variables" do
-    parser.stub(:argv).and_return(["descriptor"])
-    expect { cmd.execute(view) }.to raise_exception(Obvious::CLI::MissingVariable)
+    allow(parser).to receive(:argv).and_return(["descriptor"])
+    expect { cmd.execute(view) }.to raise_exception
   end
 
   it 'tells the view it succeeded' do
-    view.should_receive(:report_success)
+    expect(view).to receive(:report_success)
     cmd.execute(view)
   end
 end
