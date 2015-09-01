@@ -6,6 +6,12 @@ independent of the app logic itself.
 
 You can get a full explanation of Obvious at http://obvious.retromocha.com
 
+
+# Notice:
+
+This project is no longer under active development is only made available for historical purposes.
+
+
 ## Installation
 
 Add this line to your application's Gemfile:
@@ -35,11 +41,3 @@ in the Obvious Status example app: https://github.com/RetroMocha/obvious_status.
 Currently the footprint of the Obvious library is quite small. The most important things defined so far are the Contract class
 and the Hash.has_shape? method. The rest of what makes an Obvious app interesting is the structure itself, not the libraries Obvious
 provides.
-
-## Contributing
-
-1. Fork it
-2. Create your feature branch (`git checkout -b my-new-feature`)
-3. Commit your changes (`git commit -am 'Add some feature'`)
-4. Push to the branch (`git push origin my-new-feature`)
-5. Create new Pull Request
