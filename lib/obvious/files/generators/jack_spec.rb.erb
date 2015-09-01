@@ -1,0 +1,39 @@
+<%= spec_requirements(jack).join("\n") %>
+
+describe <%= jack %>JackContract do
+  <% jack_methods.each do |method| %>
+    context "<%= method %>" do
+      it 'works with valid input' do
+        input = { id: 1 }
+        jack = <%= jack %>Double.create
+        result = jack.<%= method %> <%= "input" if has_input? method %>
+        <%- case method.to_s
+        when "save", "get" -%>
+        expect(result).to eq id: 1
+        <%- when "list" -%>
+        expect(result).to match_array [{id: 1}, {id: 2}]
+        <%- when "remove" -%>
+        expect(result).to be(true)
+        <%- else -%>
+        #FIXME: Just a tempalte
+        expect(result).to eq id: 1
+        <%- end -%>
+      end
+
+      <%- if has_input? method -%>
+      it 'raise an error with invalid input' do
+        input = { }
+        jack = <%= jack %>Double.create
+        expect { jack.<%= method %> input }.to raise_error ContractInputError
+      end
+      <%- end -%>
+
+      it 'raise an error with invalid output' do
+        input = {  id: 1 }
+        jack = <%= jack %>Double.create :bad_output
+        expect { jack.<%= method %> input }.to raise_error ContractOutputError
+      end
+    end
+  <% end %>
+end
+

@@ -1,0 +1,26 @@
+<%= spec_requirements(entity).join("\n") %>
+
+describe <%= entity %> do
+
+  describe 'self.shape' do
+    it 'should return the <%= entity %> object shape' do
+      expect(<%= entity %>.shape).to eq id: Fixnum
+    end
+  end
+
+  describe '#initialize' do
+    it 'should populate with valid input' do
+      input = { :id => 1 }
+      <%= entity.underscore %> = <%= entity %>.new input
+      expect(<%= entity.underscore %>.to_hash).to eq input
+    end
+
+    it 'should raise an error with invalid input' do
+      input = { :id => nil }
+      # should test other variations, but this is just an example
+      expect { <%= entity %>.new input }.to raise_error Obvious::TypeError
+    end
+  end
+
+end
+

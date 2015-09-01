@@ -1,32 +1,50 @@
 require 'singleton'
+require 'pathname'
+require_relative './application_structure'
+require_relative './string_ext'
 
 module Obvious
   module Generators
     class Application
-      include Singleton
+      class InvalidApplication < StandardError; end
+      class FileExists < StandardError; end
 
-      attr_reader :jacks, :entities, :dir
+      include Singleton
+      include ApplicationStructure
+      DEFAULT_NAME = "app"
+
+      attr_reader :app_name, :dir
 
       def initialize
-        @dir = 'app'
+        self.app_name = DEFAULT_NAME
+      end
 
-        counter = 1
-        while File.directory? @dir
-          @dir = "app_#{counter}"
-          counter += 1
-        end
+      def dir=(value)
+        value = "." if value == DEFAULT_NAME
+        @dir = Pathname.new(value)
+      end
+
+      def app_name=(value)
+        @app_name = extract_app_name(value)
+        self.dir = value
       end
 
       def jacks
         @jacks ||= {}
       end
+      def add_jack name, method=""
+        (jacks[name.underscore] ||= []) << method.to_s
+      end
 
       def entities
         @entities ||= {}
       end
+      def add_entity name, method=""
+        (entities[name.to_s.underscore] ||= []) << method.to_s
+      end
 
       def target_path
-        File.realpath Dir.pwd
+        dir.dirname.realpath
       end
 
       def lib_path
@@ -41,6 +59,19 @@ module Obvious
         jacks.each do |k,v|
           v.uniq!
         end
+      end
+
+      def valid?
+        File.exists? descriptors_dir
+      end
+      def verify_valid_app!
+        raise InvalidApplication.new("#{dir.expand_path} is not a valid obvious application directory") unless valid?
+      end
+      #######
+      private
+      #######
+      def extract_app_name(dir)
+        File.basename(dir)
       end
     end # ::Application
   end

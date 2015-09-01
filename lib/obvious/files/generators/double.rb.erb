@@ -1,0 +1,38 @@
+<%= doubles_requirements(jack).join("\n") %>
+
+class <%= jack %>JackDouble
+  def self.create behavior=:valid
+    case behavior.to_sym
+    when :bad_output, :invalid
+      <%= jack %>Jack_BadOutput.new
+    else
+      <%= jack %>Jack_Default.new
+    end
+  end
+end
+
+class <%= jack %>Jack_Default < <%= jack %>JackContract
+  <% jack_methods.each do |method| %>
+    def <%= method %> <%= "input" if has_input? method %>
+    <%- case method.to_s
+    when "list", "all" -%>
+      [
+        { id: 1 },
+        { id: 2 }
+      ]
+    <%- when "remove" -%>
+      true
+    <%- else -%>
+      { id: 1 }
+    <%- end -%>
+    end
+  <% end %>
+end
+
+class <%= jack %>Jack_BadOutput < <%= jack %>JackContract
+  <% jack_methods.each do |method| %>
+    def <%= method %> <%= "input" if has_input? method%>
+      nil
+    end
+  <% end %>
+end

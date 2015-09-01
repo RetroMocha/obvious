@@ -1,0 +1,26 @@
+require 'obvious'
+<%= requirements(jack).join("\n") %>
+
+class <%= jack %>JackContract < Obvious::Contract
+  <% jack_methods.each do |method| %>
+    contract_for :<%= method %>, {
+      <%- case method.to_s
+        when "save" -%>
+        input:  <%= jack %>.shape,
+        output: <%= jack %>.shape
+      <%- when "get" -%>
+        input:  { id: Fixnum },
+        output: <%= jack %>.shape
+      <%- when "list" -%>
+        input:  nil,
+        output: [ <%= jack %>.shape ]
+      <%- when "remove" -%>
+        input:  { id: Fixnum },
+        output: true
+      <%- else -%>
+        input:  {},
+        output: {}
+      <%- end -%>
+    }
+  <%- end -%>
+end
