@@ -11,6 +11,10 @@ You can get a full explanation of Obvious at http://obvious.retromocha.com
 
 This project is no longer under active development is only made available for historical purposes.
 
+Right now [Brian is working on a little of this](http://brianknapp.me/now/) and [Shawn is working on a little of that](http://shawnbaden.com/now/).
+
+Most of our spare energy goes to the [Unbranded Pocket Notebook](https://www.amazon.com/dp/B00ZGE1914/) and the [Unbranded Pocket Journal](https://www.amazon.com/dp/B016LB2XYW).
+
 
 ## Installation
 
