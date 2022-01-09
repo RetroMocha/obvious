@@ -56,7 +56,7 @@ describe Obvious::Obj do
 
       expect {@test.defined_method with_foo: 'hello', also_bar: nil }.to raise_error { |error|
         error.should be_a ArgumentError
-        error.message.should eq 'invalid type for also_bar expected Fixnum'
+        error.message.should eq 'invalid type for also_bar expected Integer'
       } 
     end
   end
