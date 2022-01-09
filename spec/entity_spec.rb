@@ -1,7 +1,7 @@
 require_relative '../lib/obvious/entity'
 
 class Thing < Obvious::Entity
-  value :id, Fixnum 
+  value :id, Integer 
   value :name, String 
 end
 

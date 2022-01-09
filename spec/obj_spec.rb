@@ -7,7 +7,7 @@ class TestObj
     @local = 'set!'
   end
 
-  define :defined_method, with_foo: [:foo, String], also_bar: [:bar, Fixnum] do |input|
+  define :defined_method, with_foo: [:foo, String], also_bar: [:bar, Integer] do |input|
     input
   end
 

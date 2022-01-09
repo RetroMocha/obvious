@@ -5,7 +5,7 @@ require_relative '../lib/obvious/contract'
 describe Hash do
   describe '#has_shape?' do
     it 'should return true for a valid shape' do
-      { id: 1 }.has_shape?(id: Fixnum).should be true
+      { id: 1 }.has_shape?(id: Integer).should be true
     end
     
     it 'should return false for an invalid shape' do
@@ -24,8 +24,8 @@ end
 
 class TestContract < Obvious::Contract
   contract_for :test, {
-    input: { id: Fixnum },
-    output: { id: Fixnum, value: String }
+    input: { id: Integer },
+    output: { id: Integer, value: String }
   }
 
   def test input

@@ -164,7 +164,7 @@ end
 class Hash
   # Checks if a hash has a certain structure.
   #     h = { k1: 1, k2: "1" }
-  #     h.has_shape?(k1: Fixnum, k2: String)
+  #     h.has_shape?(k1: Integer, k2: String)
   #     #=> true
   #     h.has_shape?(k1: Class, k2: String)
   #     #=> false
