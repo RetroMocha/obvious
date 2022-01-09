@@ -4,6 +4,10 @@ on: [push]
 
 jobs:
   unit-tests:
+    strategy:
+      matrix:
+        ruby: [ 2.5, 2.6, 2.7, 3.1 ]
+    name: ${{ matrix.ruby }}
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
