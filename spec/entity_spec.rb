@@ -1,7 +1,7 @@
 require_relative '../lib/obvious/entity'
 
 class Thing < Obvious::Entity
-  value :id, Fixnum 
+  value :id, Integer 
   value :name, String 
 end
 
@@ -36,8 +36,8 @@ describe Thing do
   it 'should create a valid object with valid input' do
     input = { name: 'Thing', id: 1 }
     t = Thing.new input
-    t.name.should eq 'Thing'
-    t.id.should eq 1
+    expect(t.name).to eq 'Thing'
+    expect(t.id).to eq 1
   end
 
   it 'should raise an error with invalid input types' do
@@ -59,7 +59,7 @@ describe Thing do
     it 'should return a hash representation of the object' do
       input = { name: 'Thing', id: 1 }
       t = Thing.new input
-      t.to_hash.should eq input
+      expect(t.to_hash).to eq input
     end
   end
 
