@@ -4,12 +4,16 @@ on: [push]
 
 jobs:
   unit-tests:
+    strategy:
+      matrix:
+        ruby: [ 2.7, '3.0', 3.1 ]
+    name: Ruby ${{ matrix.ruby }} unit tests
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
       - uses: ruby/setup-ruby@v1
         with:
-          ruby-version: 3.1.0
+          ruby-version: ${{ matrix.ruby }}
           bundler-cache: true
       - run: |
           bundle exec rspec
