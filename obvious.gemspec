@@ -9,7 +9,7 @@ Gem::Specification.new do |gem|
   gem.authors       = ["Brian Knapp"]
   gem.email         = ["brianknapp@gmail.com"]
   gem.description   = "A set of tools to build apps using the Obvious Architecture"
-  gem.summary       = "Isn't it Obvious?"
+  gem.summary       = "Clean Architecture framework"
   gem.homepage      = "http://obvious.retromocha.com/"
 
   gem.files         = `git ls-files`.split($/)

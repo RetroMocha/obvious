@@ -1,7 +1,7 @@
 PATH
   remote: .
   specs:
-    obvious (0.0.10)
+    obvious (0.1.0)
 
 GEM
   remote: https://rubygems.org/
@@ -22,6 +22,7 @@ GEM
     rspec-support (3.10.3)
 
 PLATFORMS
+  ruby
   x86_64-darwin-20
   x86_64-linux
 
