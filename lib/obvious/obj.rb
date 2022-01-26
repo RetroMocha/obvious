@@ -5,31 +5,29 @@ module Obvious
         base.extend ClassMethods
       end
     end
-   
+
     module ClassMethods
 
-      def define method, input = {}, &block 
-        define_method(method)  do |method_input = {}| 
+      def define method, input = {}, &block
+        define_method(method) do |method_input = {}|
           block_input = {}
-          method_input.each do |k,v| 
-            if input[k].nil? 
+          method_input.each do |k,v|
+            if input[k].nil?
               raise ArgumentError.new "invalid input field #{k}"
-            end 
+            end
 
-            unless v.is_a? input[k][1]
-              raise ArgumentError.new "invalid type for #{k} expected #{input[k][1]}"
-            end 
-
-            block_input[input[k][0]] = v
+            unless v.is_a? input[k]
+              raise ArgumentError.new "invalid type for #{k} expected #{input[k]}"
+            end
           end
-   
+
           input.each do |k,v|
-            if block_input[v[0]].nil?
+            if method_input[k].nil?
               raise ArgumentError.new "missing input field #{k}"
             end
           end
 
-          self.instance_exec block_input, &block 
+          self.instance_exec method_input, &block
         end
       end
 
