@@ -7,7 +7,7 @@ describe Hash do
     it 'should return true for a valid shape' do
       expect({ id: 1 }.has_shape?(id: Integer)).to be true
     end
-    
+
     it 'should return false for an invalid shape' do
       expect({ id: 1 }.has_shape?(id: String)).to be false
     end
@@ -18,7 +18,7 @@ describe Hash do
 
     it 'should allow for nil values to be returned' do
       expect({ id: nil }.has_shape?({id: String})).to be true
-    end 
+    end
   end
 end
 
@@ -29,7 +29,7 @@ class TestContract < Obvious::Contract
   }
 
   def test input
-    { id: 1, value: 'this is a test' } 
+    { id: 1, value: 'this is a test' }
   end
 end
 
@@ -41,22 +41,22 @@ describe Obvious::Contract do
       result = tc.test id: 1
       expect(result).to eq id: 1, value: 'this is a test'
     end
-  
+
     it 'should raise a contract input error with bad input' do
       tc = TestContract.new
-      expect { tc.test Hash.new }.to raise_error ContractInputError
+      expect { tc.test Hash.new }.to raise_error Obvious::ContractInputError
     end
 
     it 'should raise a DataNotFound error if {} is returned' do
       tc = TestContract.new
-      allow(tc).to receive(:test_alias).and_return({}) 
-      expect { tc.test id: 1 }.to raise_error DataNotFoundError
+      allow(tc).to receive(:test_alias).and_return({})
+      expect { tc.test id: 1 }.to raise_error Obvious::DataNotFoundError
     end
 
     it 'should raise a contract output error if nil is returned' do
       tc = TestContract.new
-      allow(tc).to receive(:test_alias).and_return(nil) 
-      expect { tc.test id: 1 }.to raise_error ContractOutputError
+      allow(tc).to receive(:test_alias).and_return(nil)
+      expect { tc.test id: 1 }.to raise_error Obvious::ContractOutputError
     end
 
   end
