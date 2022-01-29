@@ -10,12 +10,10 @@ Gem::Specification.new do |gem|
   gem.email         = ["brianknapp@gmail.com"]
   gem.description   = "A set of tools to build apps using the Obvious Architecture"
   gem.summary       = "Clean Architecture framework"
-  gem.homepage      = "http://obvious.retromocha.com/"
-
+  gem.homepage      = "https://github.com/RetroMocha/obvious"
+  gem.license       = "MIT"
   gem.files         = `git ls-files`.split($/)
   gem.executables   = gem.files.grep(%r{^bin/}).map{ |f| File.basename(f) }
   gem.test_files    = gem.files.grep(%r{^(test|spec|features)/})
   gem.require_paths = ["lib"]
-
-  gem.add_development_dependency "rspec"
 end
