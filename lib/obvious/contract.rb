@@ -94,8 +94,8 @@ module Obvious
     def call_method method, input, input_shape, output_shape
       if input != nil && input_shape != nil
         has_shape, error_field = input.has_shape? input_shape, true
-        unless has_shape 
-          raise ContractInputError, "incorrect input data format field #{error_field}"
+        unless has_shape
+          raise Obvious::ContractInputError, "incorrect input data format field #{error_field}"
         end
 
         result = self.send method, input
@@ -106,11 +106,11 @@ module Obvious
       # check output
       # output should never be nil
       if result == nil
-        raise ContractOutputError, 'incorrect output data format'
+        raise Obvious::ContractOutputError, 'incorrect output data format'
       end
 
       if result === {}
-        raise DataNotFoundError, 'data was not found'
+        raise Obvious::DataNotFoundError, 'data was not found'
       end
 
       # we are looking for result to be a True object
@@ -118,7 +118,7 @@ module Obvious
         if output_shape == result
           return result
         else
-          raise ContractOutputError, 'incorrect output data format'
+          raise Obvious::ContractOutputError, 'incorrect output data format'
         end
       end
 
@@ -128,20 +128,20 @@ module Obvious
           inner_shape = output_shape[0]
           result.each do |item|
             has_shape, error_field = item.has_shape? inner_shape, true
-            unless has_shape 
-              raise ContractOutputError, "incorrect output data format field #{error_field}"
+            unless has_shape
+              raise Obvious::ContractOutputError, "incorrect output data format field #{error_field}"
             end
           end
 
           return result
         end
-        raise ContractOutputError, 'incorrect output data format'
+        raise Obvious::ContractOutputError, 'incorrect output data format'
       end
 
       # we want result to be true or false
       if output_shape == :true_false
         unless result == true || result == false
-          raise ContractOutputError, 'incorrect output data format'
+          raise Obvious::ContractOutputError, 'incorrect output data format'
         end
 
         return result
@@ -149,8 +149,8 @@ module Obvious
 
       # we want result to be output_shape's shape
       has_shape, error_field = result.has_shape? output_shape, true
-      unless has_shape 
-        raise ContractOutputError, "incorrect output data format field #{error_field}"
+      unless has_shape
+        raise Obvious::ContractOutputError, "incorrect output data format field #{error_field}"
       end
 
       result
@@ -158,6 +158,15 @@ module Obvious
 
   end
 
+
+  class ContractInputError < StandardError
+  end
+
+  class ContractOutputError < StandardError
+  end
+
+  class DataNotFoundError < StandardError
+  end
 end
 
 # via https://github.com/citizen428/shenanigans/blob/master/lib/shenanigans/hash/has_shape_pred.rb
@@ -178,28 +187,28 @@ class Hash
       if return_field
         return r, f
       else
-        return r 
+        return r
       end
     }
- 
+
     # I added an empty check
     if self.empty?
       return return_value.call shape.empty?, nil
-    end  
- 
+    end
+
     self.each do |k, v|
       return return_value.call false, k if shape[k] == nil
-    end 
+    end
 
     shape.each do |k, v|
       # hash_value
       hv = self[k]
-      return return_value.call false, k unless self.has_key? k 
+      return return_value.call false, k unless self.has_key? k
 
       next if hv === nil
 
-      if Hash === hv 
-        return hv.has_shape?(v, return_field) 
+      if Hash === hv
+        return hv.has_shape?(v, return_field)
       else
         return return_value.call false, k unless v === hv
       end
@@ -211,18 +220,8 @@ class Hash
   def nil_fields? list
     list.each do |field|
       return true, field unless self[field]
-    end  
-    
+    end
+
     return false, nil
   end
 end
-
-class ContractInputError < StandardError
-end
-
-class ContractOutputError < StandardError
-end
-
-class DataNotFoundError < StandardError
-end
-

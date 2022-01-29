@@ -1,7 +1,0 @@
-#!/usr/bin/env ruby
-
-require 'obvious'
-
-if ARGV[0] == 'generate'
-  Obvious::Generators::ApplicationGenerator.generate
-end

@@ -4,18 +4,6 @@ Obvious is an architecture framework. The goal is to provide architectural struc
 obvious to understand and where both the front end UI and back end infrastructure are treated as implementation details 
 independent of the app logic itself.
 
-You can get a full explanation of Obvious at http://obvious.retromocha.com
-
-
-# Notice:
-
-This project is no longer under active development is only made available for historical purposes.
-
-Right now [Brian is working on a little of this](http://brianknapp.me/now/) and [Shawn is working on a little of that](http://shawnbaden.com/now/).
-
-Most of our spare energy goes to the [Unbranded Pocket Notebook](https://www.amazon.com/dp/B00ZGE1914/) and the [Unbranded Pocket Journal](https://www.amazon.com/dp/B016LB2XYW).
-
-
 ## Installation
 
 Add this line to your application's Gemfile:
