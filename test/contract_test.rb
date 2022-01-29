@@ -19,13 +19,13 @@ class ContractTest < Minitest::Test
   end
 
   def test_invalid_input
-    assert_raises ContractInputError do
+    assert_raises Obvious::ContractInputError do
       TestContract.new.test(Hash.new)
     end
   end
 
   def test_empty_hash_return
-    assert_raises DataNotFoundError do
+    assert_raises Obvious::DataNotFoundError do
       tc = TestContract.new
       tc.stub :test_alias, {} do
         tc.test(id: 1)
@@ -34,7 +34,7 @@ class ContractTest < Minitest::Test
   end
 
   def test_nil_return
-    assert_raises ContractOutputError do
+    assert_raises Obvious::ContractOutputError do
       tc = TestContract.new
       tc.stub :test_alias, nil do
         tc.test(id: 1)
