@@ -1,4 +1,4 @@
-require 'test_helper'
+require 'minitest/autorun'
 require_relative '../lib/obvious/obj'
 
 class TestObj
@@ -14,6 +14,11 @@ class TestObj
 
   define :defined_local do |input|
     @local
+  end
+
+  define :early_return_example do |input|
+    next true
+    false
   end
 end
 
@@ -52,5 +57,9 @@ class ObjTest < Minitest::Test
       TestObj.new.defined_method foo: 'hello', bar: nil
     end
     assert_equal('invalid type for bar expected Integer', error.message)
+  end
+
+  def test_early_return
+    assert(TestObj.new.early_return_example)
   end
 end

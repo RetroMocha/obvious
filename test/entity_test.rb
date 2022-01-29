@@ -1,4 +1,4 @@
-require 'test_helper'
+require 'minitest/autorun'
 require_relative '../lib/obvious/entity'
 
 class Thing < Obvious::Entity
@@ -35,7 +35,7 @@ end
 class EntityTest < Minitest::Test
   def test_valid_input
     t = Thing.new(name: 'Thing', id: 1)
-    assert_equal(t.name, 'Thing')
+    assert_equal('Thing', t.name)
     assert_equal(t.id, 1)
   end
 
@@ -59,7 +59,7 @@ class EntityTest < Minitest::Test
 
   def test_to_hash
     t = Thing.new(name: 'Thing', id: 1)
-    assert_equal(t.to_hash, {name: 'Thing', id: 1})
+    assert_equal({name: 'Thing', id: 1}, t.to_hash)
   end
 
   def test_failed_validation

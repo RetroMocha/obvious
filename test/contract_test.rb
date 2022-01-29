@@ -1,4 +1,4 @@
-require 'test_helper'
+require 'minitest/autorun'
 require_relative '../lib/obvious/contract'
 
 class TestContract < Obvious::Contract
@@ -15,7 +15,7 @@ end
 class ContractTest < Minitest::Test
   def test_valid_input
     result = TestContract.new.test(id: 1)
-    assert_equal(result, {id: 1, value: 'this is a test'})
+    assert_equal({id: 1, value: 'this is a test'}, result)
   end
 
   def test_invalid_input
@@ -57,6 +57,6 @@ class HashTest < Minitest::Test
   end
 
   def test_has_shape_return_invalid_field
-    assert_equal({ id: 1 }.has_shape?({id: String}, true), [false, :id])
+    assert_equal([false, :id], { id: 1 }.has_shape?({id: String}, true))
   end
 end
