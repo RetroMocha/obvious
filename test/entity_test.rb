@@ -36,7 +36,7 @@ class EntityTest < Minitest::Test
   def test_valid_input
     t = Thing.new(name: 'Thing', id: 1)
     assert_equal('Thing', t.name)
-    assert_equal(t.id, 1)
+    assert_equal(1, t.id)
   end
 
   def test_invalid_input_types
