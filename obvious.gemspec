@@ -6,8 +6,8 @@ require 'obvious/version'
 Gem::Specification.new do |gem|
   gem.name          = "obvious"
   gem.version       = Obvious::VERSION
-  gem.authors       = ["Brian Knapp"]
-  gem.email         = ["brianknapp@gmail.com"]
+  gem.authors       = ["Brian Knapp", "Shawn Baden"]
+  gem.email         = ["brianknapp@gmail.com", "shawnbaden@hotmail.com"]
   gem.description   = "A set of tools to build apps using the Obvious Architecture"
   gem.summary       = "Clean Architecture framework"
   gem.homepage      = "https://github.com/RetroMocha/obvious"
